@@ -1,8 +1,6 @@
-import Image from 'next/image'
-
 const Home = () => {
   return (
-    <div className="bg-background-500">
+    <div className="bg-white">
       <h1 className="text-4xl text-primary-500 font-heading italic font-black">
         The BiblioNest
       </h1>
