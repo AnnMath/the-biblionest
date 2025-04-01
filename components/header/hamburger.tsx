@@ -13,7 +13,7 @@ const Hamburger = () => {
 
   const links = [
     { title: 'Explore', href: '/search' },
-    { title: 'My Books', href: '/my-books' },
+    { title: 'My Books', href: '/library' },
   ]
 
   // TODO: Sign in button should close menu, as should clicking on the links
@@ -21,8 +21,9 @@ const Hamburger = () => {
   return (
     <>
       <button
-        className="flex flex-col gap-2 justify-center"
+        className="flex flex-col gap-2 justify-center sm:hidden"
         onClick={handleClick}
+        aria-label={isOpen ? 'close menu' : 'open menu'}
       >
         <span
           className={`w-12 h-1 rounded-2xl bg-primary-500 transition-all duration-300 ease-out ${
@@ -47,7 +48,7 @@ const Hamburger = () => {
               {link.title}
             </Link>
           ))}
-          <Button className="bg-accent-500 rounded-sm font-heading font-bold italic text-base">
+          <Button className="font-heading font-bold italic text-base text-background-500">
             Sign in
           </Button>
         </article>
