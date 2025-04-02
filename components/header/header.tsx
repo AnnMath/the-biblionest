@@ -127,10 +127,11 @@ const Header = () => {
           </span>
           <Button
             size="sm"
+            variant="link"
             className="hidden sm:inline-flex text-sm"
             onClick={signOut}
           >
-            Sign out
+            Log out
           </Button>
         </div>
       ) : (
@@ -139,7 +140,7 @@ const Header = () => {
           className="hidden sm:inline-flex self-start text-sm"
           onClick={() => setAuthModalOpen(true)}
         >
-          Sign in
+          Log in
         </Button>
       )}
 
