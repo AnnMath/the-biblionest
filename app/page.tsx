@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="bg-white">
+    <div className="bg-white h-screen">
       <h1 className="text-4xl text-primary-500 font-heading italic font-black">
         The BiblioNest
       </h1>

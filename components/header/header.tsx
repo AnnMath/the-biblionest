@@ -28,7 +28,7 @@ const Header = () => {
           </Link>
         </li>
       </ul>
-      <Button className="hidden sm:block">Sign in</Button>
+      <Button className="hidden sm:inline-flex">Sign in</Button>
     </nav>
   )
 }
