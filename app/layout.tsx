@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Playfair_Display, Libre_Baskerville } from 'next/font/google'
 import './globals.css'
 import Header from '../components/header/header'
+import Footer from '@/components/footer/footer'
 
 const playfair = Playfair_Display({
   variable: '--font-playfair',
@@ -28,10 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${baskerville.variable} font-body antialiased`}
+        className={`${playfair.variable} ${baskerville.variable} text-text-500 font-body antialiased`}
       >
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   )
