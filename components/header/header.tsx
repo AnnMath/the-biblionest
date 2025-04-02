@@ -1,9 +1,14 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import Hamburger from './hamburger'
 import { Button } from '../ui/button'
+import AuthModal from '../auth/auth-modal'
+import { useState } from 'react'
 
 const Header = () => {
+  const [isAuthModalOpen, setAuthModalOpen] = useState(false)
   return (
     <nav className="bg-background-500 flex justify-between p-4 sm:px-8 shadow-slate-900 items-center">
       <Link href="/">
@@ -28,7 +33,13 @@ const Header = () => {
           </Link>
         </li>
       </ul>
-      <Button className="hidden sm:inline-flex">Sign in</Button>
+      <Button
+        className="hidden sm:inline-flex"
+        onClick={() => setAuthModalOpen(true)}
+      >
+        Sign in
+      </Button>
+      <AuthModal isOpen={isAuthModalOpen} onClose={setAuthModalOpen} />
     </nav>
   )
 }
