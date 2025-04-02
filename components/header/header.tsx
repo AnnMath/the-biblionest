@@ -5,10 +5,93 @@ import Image from 'next/image'
 import Hamburger from './hamburger'
 import { Button } from '../ui/button'
 import AuthModal from '../auth/auth-modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
+import { Profile } from '@/interfaces'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 const Header = () => {
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [isAuthModalOpen, setAuthModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  // Function to fetch the user profile
+  const fetchProfile = async () => {
+    try {
+      setLoading(true)
+
+      // Get current session
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      // If no session, clear profile and return
+      if (!session?.user) {
+        setProfile(null)
+        return
+      }
+
+      // Fetch profile data
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('display_name')
+        .eq('id', session.user.id)
+        .single()
+
+      if (error) {
+        console.error('Error fetching profile:', error.message)
+        return
+      }
+
+      if (data) {
+        console.log('Profile data fetched:', data)
+        setProfile(data)
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Listen for auth state changes
+  useEffect(() => {
+    fetchProfile()
+
+    // Set up auth state change listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log(
+        'Auth state changed:',
+        _event,
+        session ? 'User logged in' : 'User logged out'
+      )
+      fetchProfile()
+    })
+
+    // Cleanup function
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  // TODO: some decent error handling here
+  const signOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Error signing out:', error.message)
+      }
+    } catch (err) {
+      console.error('Unexpected error during sign out:', err)
+    }
+  }
+
   return (
     <nav className="bg-background-500 flex justify-between p-4 sm:px-8 shadow-slate-900 items-center">
       <Link href="/">
@@ -33,13 +116,37 @@ const Header = () => {
           </Link>
         </li>
       </ul>
-      <Button
-        className="hidden sm:inline-flex"
-        onClick={() => setAuthModalOpen(true)}
-      >
-        Sign in
-      </Button>
-      <AuthModal isOpen={isAuthModalOpen} onClose={setAuthModalOpen} />
+
+      {loading ? (
+        <div className="h-10 w-20"></div> // Placeholder to prevent layout shift
+      ) : profile ? (
+        <div className="hidden sm:flex items-center gap-4">
+          <span className="text-primary-500">
+            Hi, {profile.display_name || 'Reader'}!
+          </span>
+          <Button className="hidden sm:inline-flex" onClick={signOut}>
+            Sign out
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className="hidden sm:inline-flex"
+          onClick={() => setAuthModalOpen(true)}
+        >
+          Sign in
+        </Button>
+      )}
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={(open) => {
+          setAuthModalOpen(open)
+          if (!open) {
+            // Refresh profile after modal closes (in case of successful login)
+            fetchProfile()
+          }
+        }}
+      />
     </nav>
   )
 }
