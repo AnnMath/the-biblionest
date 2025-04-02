@@ -41,6 +41,7 @@ const AuthModal = ({
   const handleClose = (open: boolean) => {
     if (!open) {
       resetForm()
+      setIsSignUp(false)
     }
     onClose(open)
   }
@@ -70,7 +71,6 @@ const AuthModal = ({
           handleClose(false)
         }
       } else {
-        // Sign in logic unchanged
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -96,9 +96,11 @@ const AuthModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm bg-background-500">
         <DialogHeader>
-          <DialogTitle>{isSignUp ? 'Sign Up' : 'Sign In'}</DialogTitle>
+          <DialogTitle className="font-heading font-bold italic">
+            {isSignUp ? 'Sign Up' : 'Sign In'}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           {isSignUp && (
@@ -106,6 +108,7 @@ const AuthModal = ({
               placeholder="Display Name"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
+              className="bg-background-200"
             />
           )}
           <Input
@@ -113,12 +116,14 @@ const AuthModal = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
+            className="bg-background-200"
           />
           <Input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="bg-background-200"
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <Button onClick={handleAuth} disabled={loading} className="w-full">
@@ -127,7 +132,7 @@ const AuthModal = ({
           <Button
             variant="outline"
             onClick={toggleSignUp}
-            className="w-full"
+            className="w-full text-text-500"
             disabled={loading}
           >
             {isSignUp

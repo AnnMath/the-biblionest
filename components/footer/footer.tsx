@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '../ui/button'
 
 const Footer = () => {
   return (
@@ -20,7 +19,6 @@ const Footer = () => {
       <section className="flex flex-col gap-4 justify-between">
         <Link href="/search">Explore</Link>
         <Link href="/library">Library</Link>
-        <Button className="self-end">Sign in</Button>
       </section>
     </article>
   )
