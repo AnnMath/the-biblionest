@@ -1,22 +1,44 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
 import { Button } from '../ui/button'
+import { useState } from 'react'
+import { Profile } from '@/interfaces'
+import { CircleUserRound, LogOut } from 'lucide-react'
 
-const Hamburger = () => {
+interface HamburgerProps {
+  profile: Profile | null
+  loading: boolean
+  onSignInClick: () => void
+  onSignOutClick: () => void
+}
+
+const Hamburger = ({
+  profile,
+  loading,
+  onSignInClick,
+  onSignOutClick,
+}: HamburgerProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleClick = () => {
     setIsOpen(!isOpen)
   }
 
+  const handleAuthClick = () => {
+    if (profile) {
+      onSignOutClick()
+    } else {
+      onSignInClick()
+    }
+    // Close the menu after clicking
+    setIsOpen(false)
+  }
+
   const links = [
     { title: 'Explore', href: '/search' },
     { title: 'My Books', href: '/library' },
   ]
-
-  // TODO: Sign in button should close menu, as should clicking on the links
 
   return (
     <>
@@ -42,15 +64,35 @@ const Hamburger = () => {
         ></span>
       </button>
       {isOpen && (
-        <article className="w-screen h-screen gap-16 absolute z-1 top-32 left-0 pt-8 bg-secondary-500 text-text-500 text-4xl font-heading font-bold italic flex flex-col items-center p-4">
+        <article className="w-screen h-screen gap-16 absolute z-10 top-32 left-0 pt-8 bg-secondary-500 text-text-500 text-4xl font-heading font-bold italic flex flex-col items-center p-4">
+          {!loading && (
+            <Button
+              variant="link"
+              className="text-base flex items-center gap-2"
+              onClick={handleAuthClick}
+            >
+              {profile ? (
+                <>
+                  <LogOut />
+                  Log out ({profile.display_name || 'Reader'})
+                </>
+              ) : (
+                <>
+                  <CircleUserRound />
+                  Log in
+                </>
+              )}
+            </Button>
+          )}
           {links.map((link) => (
-            <Link key={link.href} href={link.href}>
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+            >
               {link.title}
             </Link>
           ))}
-          <Button className="font-heading font-bold italic text-base text-background-500">
-            Sign in
-          </Button>
         </article>
       )}
     </>

@@ -8,6 +8,7 @@ import AuthModal from '../auth/auth-modal'
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { Profile } from '@/interfaces'
+import { CircleUserRound, LogOut } from 'lucide-react'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -92,6 +93,10 @@ const Header = () => {
     }
   }
 
+  const openAuthModal = () => {
+    setAuthModalOpen(true)
+  }
+
   return (
     <nav className="bg-background-500 flex justify-between p-4 sm:px-8 items-center">
       <Link href="/">
@@ -103,7 +108,12 @@ const Header = () => {
           className="w-24 h-24 sm:w-36 sm:h-36"
         />
       </Link>
-      <Hamburger />
+      <Hamburger
+        profile={profile}
+        loading={loading}
+        onSignInClick={openAuthModal}
+        onSignOutClick={signOut}
+      />
       <ul className="text-2xl font-heading italic font-bold justify-around text-primary-500 items-center hidden sm:flex w-md">
         <li>
           <Link href="/search" className="hover:underline">
@@ -120,27 +130,28 @@ const Header = () => {
       {loading ? (
         <div className="h-10 w-20"></div> // Placeholder to prevent layout shift
       ) : profile ? (
-        <div className="hidden sm:flex self-start items-center gap-4">
+        <div className="hidden sm:flex flex-col self-start items-center gap-1">
           {/* TODO: Link to profile */}
-          <span className="text-primary-600 text-sm">
-            Hi, {profile.display_name || 'Reader'}!
-          </span>
           <Button
             size="sm"
             variant="link"
-            className="hidden sm:inline-flex text-sm"
+            className="hidden sm:inline-flex cursor-pointer"
             onClick={signOut}
           >
-            Log out
+            <LogOut /> Log out
           </Button>
+          <span className="text-primary-600 text-sm">
+            Hi, {profile.display_name || 'Reader'}!
+          </span>
         </div>
       ) : (
         <Button
           size="sm"
-          className="hidden sm:inline-flex self-start text-sm"
-          onClick={() => setAuthModalOpen(true)}
+          variant="link"
+          className="hidden sm:inline-flex self-start cursor-pointer"
+          onClick={openAuthModal}
         >
-          Log in
+          <CircleUserRound /> Log in
         </Button>
       )}
 
