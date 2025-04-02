@@ -93,7 +93,7 @@ const Header = () => {
   }
 
   return (
-    <nav className="bg-background-500 flex justify-between p-4 sm:px-8 shadow-slate-900 items-center">
+    <nav className="bg-background-500 flex justify-between p-4 sm:px-8 items-center">
       <Link href="/">
         <Image
           src="/biblionest-logo.svg"
@@ -120,17 +120,23 @@ const Header = () => {
       {loading ? (
         <div className="h-10 w-20"></div> // Placeholder to prevent layout shift
       ) : profile ? (
-        <div className="hidden sm:flex items-center gap-4">
-          <span className="text-primary-500">
+        <div className="hidden sm:flex self-start items-center gap-4">
+          {/* TODO: Link to profile */}
+          <span className="text-primary-600 text-sm">
             Hi, {profile.display_name || 'Reader'}!
           </span>
-          <Button className="hidden sm:inline-flex" onClick={signOut}>
+          <Button
+            size="sm"
+            className="hidden sm:inline-flex text-sm"
+            onClick={signOut}
+          >
             Sign out
           </Button>
         </div>
       ) : (
         <Button
-          className="hidden sm:inline-flex"
+          size="sm"
+          className="hidden sm:inline-flex self-start text-sm"
           onClick={() => setAuthModalOpen(true)}
         >
           Sign in
