@@ -94,10 +94,7 @@ const AuthModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent
-        aria-describedby="dialog-title"
-        className="max-w-sm bg-background-500"
-      >
+      <DialogContent className="max-w-sm bg-background-500">
         <DialogDescription className="sr-only">
           {isSignUp ? 'Sign up' : 'Sign in'}
         </DialogDescription>
