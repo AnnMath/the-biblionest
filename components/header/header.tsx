@@ -8,9 +8,14 @@ import AuthModal from '../auth/auth-modal'
 import { useEffect, useState } from 'react'
 import { Profile } from '@/interfaces'
 import { CircleUserRound, LogOut } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
+  const router = useRouter()
+
+  const supabase = createClient()
+
   const [profile, setProfile] = useState<Profile | null>(null)
   const [isAuthModalOpen, setAuthModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -82,6 +87,11 @@ const Header = () => {
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error('Error signing out:', error.message)
+      } else {
+        setTimeout(() => {
+          router.push('/')
+          router.refresh()
+        }, 300) // Small delay for better UX
       }
     } catch (err) {
       console.error('Unexpected error during sign out:', err)
@@ -90,6 +100,24 @@ const Header = () => {
 
   const openAuthModal = () => {
     setAuthModalOpen(true)
+  }
+
+  const handleAuthModalClose = (open: boolean) => {
+    setAuthModalOpen(open)
+    if (!open) {
+      // Modal closed, fetch profile to check if user is now logged in
+      fetchProfile().then(() => {
+        // Check if user is now logged in
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session?.user) {
+            // User just logged in, redirect to profile with a small delay
+            setTimeout(() => {
+              router.push('/profile')
+            }, 300) // Small delay for better UX
+          }
+        })
+      })
+    }
   }
 
   return (
@@ -130,36 +158,35 @@ const Header = () => {
           <Button
             size="sm"
             variant="link"
-            className="hidden sm:inline-flex cursor-pointer"
+            className="hidden sm:inline-flex cursor-pointer text-primary-600"
             onClick={signOut}
           >
             <LogOut /> Log out
           </Button>
-          <span className="text-primary-600 text-sm">
-            Hi, {profile.display_name || 'Reader'}!
+          <span className="text-primary-600">
+            <Link href="/profile">
+              <Button
+                variant="link"
+                className="cursor-pointer text-primary-600"
+              >
+                <CircleUserRound />
+                {profile.display_name || 'Reader'}
+              </Button>
+            </Link>
           </span>
         </div>
       ) : (
         <Button
           size="sm"
           variant="link"
-          className="hidden sm:inline-flex self-start cursor-pointer"
+          className="hidden sm:inline-flex self-start cursor-pointer text-primary-600"
           onClick={openAuthModal}
         >
           <CircleUserRound /> Log in
         </Button>
       )}
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={(open) => {
-          setAuthModalOpen(open)
-          if (!open) {
-            // Refresh profile after modal closes (in case of successful login)
-            fetchProfile()
-          }
-        }}
-      />
+      <AuthModal isOpen={isAuthModalOpen} onClose={handleAuthModalClose} />
     </nav>
   )
 }

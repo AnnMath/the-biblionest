@@ -66,23 +66,37 @@ const Hamburger = ({
       {isOpen && (
         <article className="w-screen h-screen gap-16 absolute z-10 top-32 left-0 pt-8 bg-secondary-500 text-text-500 text-4xl font-heading font-bold italic flex flex-col items-center p-4">
           {!loading && (
-            <Button
-              variant="link"
-              className="text-base flex items-center gap-2"
-              onClick={handleAuthClick}
-            >
-              {profile ? (
-                <>
-                  <LogOut />
-                  Log out ({profile.display_name || 'Reader'})
-                </>
-              ) : (
-                <>
-                  <CircleUserRound />
-                  Log in
-                </>
+            <div>
+              {profile && (
+                <Link href="/profile">
+                  <Button
+                    variant="link"
+                    className="text-base"
+                    onClick={handleClick}
+                  >
+                    <CircleUserRound /> {profile?.display_name || 'Reader'}'s
+                    profile
+                  </Button>
+                </Link>
               )}
-            </Button>
+              <Button
+                variant="link"
+                className="text-base flex items-center gap-2"
+                onClick={handleAuthClick}
+              >
+                {profile ? (
+                  <>
+                    <LogOut />
+                    Log out
+                  </>
+                ) : (
+                  <>
+                    <CircleUserRound />
+                    Log in
+                  </>
+                )}
+              </Button>
+            </div>
           )}
           {links.map((link) => (
             <Link

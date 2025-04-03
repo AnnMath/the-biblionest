@@ -1,5 +1,5 @@
 'use server'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/utils/supabase/supabase'
 
 export async function signInWithEmail(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({

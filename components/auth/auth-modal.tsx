@@ -2,17 +2,13 @@ import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { createClient } from '@/utils/supabase/client'
 
 const AuthModal = ({
   isOpen,
@@ -21,6 +17,8 @@ const AuthModal = ({
   isOpen: boolean
   onClose: (open: boolean) => void
 }) => {
+  const supabase = createClient()
+
   const [isSignUp, setIsSignUp] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -97,6 +95,9 @@ const AuthModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-sm bg-background-500">
+        <DialogDescription className="sr-only">
+          {isSignUp ? 'Sign up' : 'Sign in'}
+        </DialogDescription>
         <DialogHeader>
           <DialogTitle className="font-heading font-bold italic">
             {isSignUp ? 'Sign Up' : 'Sign In'}
