@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
-export default async function ProfilePage() {
+const Profile = async () => {
   const supabase = await createClient()
 
   // Get the current user - using getUser() as recommended for security
@@ -49,3 +49,5 @@ export default async function ProfilePage() {
     </div>
   )
 }
+
+export default Profile

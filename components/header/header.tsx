@@ -90,6 +90,7 @@ const Header = () => {
       } else {
         setTimeout(() => {
           router.push('/')
+          router.refresh()
         }, 300) // Small delay for better UX
       }
     } catch (err) {
@@ -157,20 +158,28 @@ const Header = () => {
           <Button
             size="sm"
             variant="link"
-            className="hidden sm:inline-flex cursor-pointer"
+            className="hidden sm:inline-flex cursor-pointer text-primary-600"
             onClick={signOut}
           >
             <LogOut /> Log out
           </Button>
-          <span className="text-primary-600 text-sm">
-            Hi, {profile.display_name || 'Reader'}!
+          <span className="text-primary-600">
+            <Link href="/profile">
+              <Button
+                variant="link"
+                className="cursor-pointer text-primary-600"
+              >
+                <CircleUserRound />
+                {profile.display_name || 'Reader'}
+              </Button>
+            </Link>
           </span>
         </div>
       ) : (
         <Button
           size="sm"
           variant="link"
-          className="hidden sm:inline-flex self-start cursor-pointer"
+          className="hidden sm:inline-flex self-start cursor-pointer text-primary-600"
           onClick={openAuthModal}
         >
           <CircleUserRound /> Log in
