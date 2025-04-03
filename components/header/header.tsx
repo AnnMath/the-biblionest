@@ -8,9 +8,11 @@ import AuthModal from '../auth/auth-modal'
 import { useEffect, useState } from 'react'
 import { Profile } from '@/interfaces'
 import { CircleUserRound, LogOut } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 
 const Header = () => {
+  const supabase = createClient()
+
   const [profile, setProfile] = useState<Profile | null>(null)
   const [isAuthModalOpen, setAuthModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)

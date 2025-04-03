@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 
 const AuthModal = ({
   isOpen,
@@ -17,6 +17,8 @@ const AuthModal = ({
   isOpen: boolean
   onClose: (open: boolean) => void
 }) => {
+  const supabase = createClient()
+
   const [isSignUp, setIsSignUp] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
