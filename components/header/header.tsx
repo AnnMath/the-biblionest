@@ -9,8 +9,11 @@ import { useEffect, useState } from 'react'
 import { Profile } from '@/interfaces'
 import { CircleUserRound, LogOut } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
+  const router = useRouter()
+
   const supabase = createClient()
 
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -84,6 +87,10 @@ const Header = () => {
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error('Error signing out:', error.message)
+      } else {
+        setTimeout(() => {
+          router.push('/')
+        }, 300) // Small delay for better UX
       }
     } catch (err) {
       console.error('Unexpected error during sign out:', err)
@@ -92,6 +99,24 @@ const Header = () => {
 
   const openAuthModal = () => {
     setAuthModalOpen(true)
+  }
+
+  const handleAuthModalClose = (open: boolean) => {
+    setAuthModalOpen(open)
+    if (!open) {
+      // Modal closed, fetch profile to check if user is now logged in
+      fetchProfile().then(() => {
+        // Check if user is now logged in
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session?.user) {
+            // User just logged in, redirect to profile with a small delay
+            setTimeout(() => {
+              router.push('/profile')
+            }, 300) // Small delay for better UX
+          }
+        })
+      })
+    }
   }
 
   return (
@@ -152,16 +177,7 @@ const Header = () => {
         </Button>
       )}
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={(open) => {
-          setAuthModalOpen(open)
-          if (!open) {
-            // Refresh profile after modal closes (in case of successful login)
-            fetchProfile()
-          }
-        }}
-      />
+      <AuthModal isOpen={isAuthModalOpen} onClose={handleAuthModalClose} />
     </nav>
   )
 }
