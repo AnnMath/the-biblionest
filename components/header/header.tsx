@@ -154,7 +154,6 @@ const Header = () => {
         <div className="h-10 w-20"></div> // Placeholder to prevent layout shift
       ) : profile ? (
         <div className="hidden sm:flex flex-col self-start items-center gap-1">
-          {/* TODO: Link to profile */}
           <Button
             size="sm"
             variant="link"
