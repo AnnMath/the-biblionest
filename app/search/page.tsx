@@ -1,4 +1,4 @@
-const SearchPage = () => {
+const SearchPage = async () => {
   return (
     <>
       <article className="p-6 bg-background-300 w-full min-h-screen">

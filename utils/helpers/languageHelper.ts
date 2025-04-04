@@ -134,4 +134,8 @@ const languageMap: Record<string, string> = {
   zul: 'Zulu',
 }
 
-export default languageMap
+const displayLanguage = (code: string) => {
+  return languageMap[code] || code
+}
+
+export default displayLanguage
