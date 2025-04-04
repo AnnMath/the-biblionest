@@ -32,4 +32,8 @@ export interface Book {
   format?: string | undefined
   pages?: number | undefined
   coverUrl?: string | undefined
+  rating?: {
+    average: number | null
+    count: number
+  }
 }

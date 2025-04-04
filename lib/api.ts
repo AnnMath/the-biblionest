@@ -48,6 +48,16 @@ export const fetchBooks = async (
         ? await fetchFromAPI(`${BASE_URL}/books/${editionId}.json`) // e.g. https://openlibrary.org/books/OL51694024M.json
         : null
 
+      const ratingsData = await fetchFromAPI(
+        `${BASE_URL}${workId}/ratings.json`
+      )
+
+      const ratingsSummary = ratingsData.summary
+      const rating = {
+        average: ratingsSummary.average,
+        count: ratingsSummary.count,
+      }
+
       const languageCode = editionData?.languages?.[0]?.key?.replace(
         '/languages/',
         ''
@@ -73,6 +83,7 @@ export const fetchBooks = async (
         coverUrl: book.cover_i
           ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
           : undefined,
+        rating: rating || undefined,
       }
     })
   )
