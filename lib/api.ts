@@ -84,6 +84,7 @@ export const fetchBooks = async (
           ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
           : undefined,
         rating: rating || undefined,
+        subjects: workData?.subjects,
       }
     })
   )
