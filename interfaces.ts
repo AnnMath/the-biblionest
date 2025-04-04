@@ -36,4 +36,5 @@ export interface Book {
     average: number | null
     count: number
   }
+  subjects?: string[]
 }

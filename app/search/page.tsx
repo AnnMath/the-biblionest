@@ -1,4 +1,8 @@
-const SearchPage = () => {
+import { fetchBooks } from '@/lib/api'
+
+const SearchPage = async () => {
+  const books = await fetchBooks('the shining', 'all', 10)
+  console.log(books)
   return (
     <>
       <article className="p-6 bg-background-300 w-full min-h-screen">
