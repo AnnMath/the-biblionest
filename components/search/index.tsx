@@ -9,6 +9,7 @@ import SearchBar from './search-bar'
 import { fetchBooksLite } from '@/lib/api'
 import BookListSkeleton from './book-list-skeleton'
 import LoadingDecoration from '../loading/loading-decoration'
+import BookList from './book-list'
 
 const Search = () => {
   const router = useRouter()
@@ -86,6 +87,7 @@ const Search = () => {
           No books found for "{queryParam}"
         </div>
       )}
+      {!loading && books.length > 0 && <BookList books={books} />}
     </div>
   )
 }

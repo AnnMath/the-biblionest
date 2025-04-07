@@ -19,7 +19,7 @@ const SearchPage = () => {
             alt=""
             width={200}
             height={100}
-            className=""
+            className="w-sm h-auto"
           />
         </div>
         <Search />
