@@ -44,7 +44,10 @@ const SearchBar = ({
       <label htmlFor="search" className="sr-only">
         Search books
       </label>
-      <Select onValueChange={(value) => setType(value as SearchType)}>
+      <Select
+        onValueChange={(value) => setType(value as SearchType)}
+        defaultValue="all"
+      >
         <SelectTrigger className="w-full md:w-[180px] self-start md:self-auto">
           <SelectValue placeholder="Search by" />
         </SelectTrigger>

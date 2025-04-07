@@ -37,7 +37,7 @@ export const fetchBooksLite = async (
       workId: book.key.replace('/works/', ''),
       publishYear: book.first_publish_year || undefined,
       coverUrl: book.cover_i
-        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
         : undefined,
       editionKey:
         book.cover_edition_key ||
