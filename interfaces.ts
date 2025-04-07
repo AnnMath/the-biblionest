@@ -21,17 +21,22 @@ export interface BookFromAPI {
   title: string
 }
 
-export interface Book {
+export interface BaseBook {
   title: string
   authors: string[]
   workId: string
+  coverUrl?: string
+}
+
+export interface BookLite extends BaseBook {}
+
+export interface Book extends BaseBook {
   publishYear?: number | undefined
   synopsis?: string
   isbn?: string | undefined
   language?: string
   format?: string | undefined
   pages?: number | undefined
-  coverUrl?: string | undefined
   rating?: {
     average: number | null
     count: number

@@ -6,8 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SearchBar from './search-bar'
-import { fetchBooks } from '@/lib/api'
-import Image from 'next/image'
+import { fetchBooksLite } from '@/lib/api'
 import BookListSkeleton from './book-list-skeleton'
 import LoadingDecoration from '../loading/loading-decoration'
 
@@ -43,7 +42,7 @@ const Search = () => {
     setError(null)
 
     try {
-      const results = await fetchBooks(query, type, limit)
+      const results = await fetchBooksLite(query, type, limit)
       setBooks(results)
       console.log(results)
     } catch (err) {
