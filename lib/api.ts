@@ -14,7 +14,7 @@ const fetchFromAPI = async (url: string) => {
 export const fetchBooks = async (
   query: string,
   type: SearchType = 'all',
-  limit: number = 20
+  limit: string = '20'
 ): Promise<Book[]> => {
   if (!query) return []
 
@@ -41,8 +41,7 @@ export const fetchBooks = async (
       const editionId =
         book.cover_edition_key || // preferred - so far, this seems to be on all books but just to be safe, some fallbacks
         book.lending_edition_s ||
-        book.ia?.[0] ||
-        null
+        (book.ia && book.ia[0])
 
       const editionData = editionId
         ? await fetchFromAPI(`${BASE_URL}/books/${editionId}.json`) // e.g. https://openlibrary.org/books/OL51694024M.json
@@ -52,11 +51,13 @@ export const fetchBooks = async (
         `${BASE_URL}${workId}/ratings.json`
       )
 
-      const ratingsSummary = ratingsData.summary
-      const rating = {
-        average: ratingsSummary.average,
-        count: ratingsSummary.count,
-      }
+      const ratingsSummary = ratingsData?.summary
+      const rating = ratingsSummary
+        ? {
+            average: ratingsSummary.average,
+            count: ratingsSummary.count,
+          }
+        : undefined
 
       const languageCode = editionData?.languages?.[0]?.key?.replace(
         '/languages/',
@@ -77,13 +78,13 @@ export const fetchBooks = async (
           'No synopsis available.',
         isbn:
           editionData?.isbn_13?.[0] || editionData?.isbn_10?.[0] || undefined,
-        language: displayLang,
+        language: displayLang || 'Unknown',
         format: editionData?.physical_format || undefined,
         pages: editionData?.number_of_pages || undefined,
         coverUrl: book.cover_i
           ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
           : undefined,
-        rating: rating || undefined,
+        rating: rating,
         subjects: workData?.subjects,
       }
     })

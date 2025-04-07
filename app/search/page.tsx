@@ -1,8 +1,7 @@
-import { fetchBooks } from '@/lib/api'
+import Search from '@/components/search'
+import Image from 'next/image'
 
-const SearchPage = async () => {
-  const books = await fetchBooks('the shining', 'all', 10)
-  console.log(books)
+const SearchPage = () => {
   return (
     <>
       <article className="p-6 bg-background-300 w-full min-h-screen">
@@ -14,6 +13,16 @@ const SearchPage = async () => {
           personal library. Whether you're building a to-be-read list or
           revisiting old classics, start your next literary adventure here.
         </p>
+        <div className="flex mx-auto justify-center mb-6">
+          <Image
+            src="/decoration-1.svg"
+            alt=""
+            width={200}
+            height={100}
+            className=""
+          />
+        </div>
+        <Search />
       </article>
     </>
   )
