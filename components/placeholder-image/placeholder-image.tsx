@@ -5,9 +5,10 @@ const PlaceholderImage = () => {
     <Image
       src="/placeholder.jpg"
       alt=""
-      height={200}
-      width={200}
+      height={270}
+      width={180}
       className="sepia-30"
+      priority
     />
   )
 }

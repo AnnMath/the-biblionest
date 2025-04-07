@@ -13,14 +13,15 @@ import PlaceholderImage from '../placeholder-image/placeholder-image'
 const BookListCard = ({ book }: { book: BookLite }) => {
   return (
     <Card className="flex flex-col items-center bg-background-200 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="w-auto h-auto">
+      <Image src="/decoration-2-top.svg" alt="" width={244} height={32} />
+      <div className="relative w-[180px] h-[270px] flex items-center justify-center">
         {book.coverUrl ? (
           <Image
             src={book.coverUrl}
             alt={`${book.title} cover`}
-            height={300}
-            width={200}
-            className="object-cover"
+            fill
+            sizes="180px"
+            className="object-contain"
             placeholder="blur"
             blurDataURL="/placeholder.jpg"
           />
@@ -28,6 +29,7 @@ const BookListCard = ({ book }: { book: BookLite }) => {
           <PlaceholderImage />
         )}
       </div>
+      <Image src="/decoration-2-bottom.svg" alt="" width={244} height={32} />
       <CardContent className="mt-auto px-4">
         <h3 className="font-bold font-heading text-lg">{book.title} </h3>
 

@@ -49,7 +49,6 @@ const Search = () => {
     } catch (err) {
       console.error(err)
       setError('Something went wrong while fetching books.')
-      setBooks([])
     } finally {
       setLoading(false)
     }
@@ -81,7 +80,9 @@ const Search = () => {
           <BookListSkeleton />
         </>
       )}
-      {error && <div className="text-center mt-8 text-red-500">{error}</div>}
+      {!loading && error && (
+        <div className="text-center mt-8 text-red-500">{error}</div>
+      )}
       {!loading && !error && books.length === 0 && queryParam && (
         <div className="text-center mt-8">
           No books found for "{queryParam}"
