@@ -1,4 +1,4 @@
-import { Book, BookFromAPI } from '@/interfaces'
+import { Book, BookFromAPI, BookLite } from '@/interfaces'
 import { SearchType } from '@/types'
 import displayLanguage from '@/utils/helpers/languageHelper'
 
@@ -11,6 +11,46 @@ const fetchFromAPI = async (url: string) => {
   return res.json()
 }
 
+export const fetchBooksLite = async (
+  query: string,
+  type: SearchType = 'all',
+  limit: string = '20'
+): Promise<BookLite[]> => {
+  if (!query) return []
+
+  let searchUrl = `${BASE_URL}/search.json?limit=${limit}`
+  if (type === 'title') {
+    searchUrl += `&title=${encodeURIComponent(query)}`
+  } else if (type === 'author') {
+    searchUrl += `&author=${encodeURIComponent(query)}`
+  } else {
+    searchUrl += `&q=${encodeURIComponent(query)}`
+  }
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData?.docs) return []
+
+  const books = searchData.docs.map((book: BookFromAPI) => {
+    return {
+      title: book.title || 'Unknown Title',
+      authors: book.author_name || ['Unknown Author'],
+      workId: book.key.replace('/works/', ''),
+      publishYear: book.first_publish_year || undefined,
+      coverUrl: book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+        : undefined,
+      editionKey:
+        book.cover_edition_key ||
+        book.lending_edition_s ||
+        (book.ia && book.ia[0]) ||
+        null,
+    }
+  })
+
+  return books
+}
+
+// TODO: Change this to a fetchBook details function
 export const fetchBooks = async (
   query: string,
   type: SearchType = 'all',
