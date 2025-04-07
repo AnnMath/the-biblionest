@@ -80,6 +80,12 @@ const Search = () => {
           <BookListSkeleton />
         </>
       )}
+      {error && <div className="text-center mt-8 text-red-500">{error}</div>}
+      {!loading && !error && books.length === 0 && queryParam && (
+        <div className="text-center mt-8">
+          No books found for "{queryParam}"
+        </div>
+      )}
     </div>
   )
 }
