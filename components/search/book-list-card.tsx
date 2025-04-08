@@ -6,7 +6,13 @@ import Link from 'next/link'
 
 const BookListCard = ({ book }: { book: BookLite }) => {
   return (
-    <Link href={`/book/${book.workId}?edition=${book.editionKey}`}>
+    <Link
+      href={
+        book.editionKey
+          ? `/book/${book.workId}?edition=${book.editionKey}`
+          : `/book/${book.workId}`
+      }
+    >
       <Card className="flex flex-col items-center bg-background-100 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
         <Image src="/decoration-2-top.svg" alt="" width={285} height={40} />
         <div className="relative w-[180px] h-[270px] flex items-center justify-center">

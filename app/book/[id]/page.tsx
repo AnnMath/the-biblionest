@@ -1,4 +1,5 @@
 import { fetchBookById } from '@/lib/api'
+import { notFound } from 'next/navigation'
 
 const BookDetailsPage = async ({
   params,
@@ -12,6 +13,9 @@ const BookDetailsPage = async ({
   const edition = searchParamObj.edition
 
   const book = await fetchBookById(id, edition)
+  // TODO: maybe some better error handling here
+  if (!book) notFound()
+
   console.log(book)
 
   return (
