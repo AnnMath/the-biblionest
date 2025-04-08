@@ -2,8 +2,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const BookListSkeleton = () => {
   return (
-    <div className="flex flex-col w-full md:flex-row md:w-3/4 md:flex-wrap gap-8 md:mx-auto mt-8 justify-center">
-      {[1, 2, 3, 4, 5, 6].map((card, index) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:mx-auto mt-8 max-w-6xl">
+      {[1, 2, 3].map((card, index) => (
         <div key={index} className="flex flex-col space-y-3">
           <Skeleton className="h-[125px] w-[250px] rounded-xl" />
           <div className="space-y-2">

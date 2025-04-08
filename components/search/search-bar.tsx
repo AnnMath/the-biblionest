@@ -41,25 +41,27 @@ const SearchBar = ({
       onSubmit={handleSubmit}
       className="max-w-xl mx-auto flex flex-col items-center gap-2 p-6 md:flex-row md:p-0"
     >
-      <label htmlFor="search" className="sr-only">
-        Search books
-      </label>
-      <Select
-        onValueChange={(value) => setType(value as SearchType)}
-        defaultValue="all"
-      >
-        <SelectTrigger className="w-full md:w-[180px] self-start md:self-auto">
+      <Select onValueChange={(value) => setType(value as SearchType)}>
+        <SelectTrigger
+          className="w-full md:w-[180px] self-start md:self-auto"
+          aria-label="search by"
+        >
           <SelectValue placeholder="Search by" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
+            <SelectLabel>Search by</SelectLabel>
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="title">Title</SelectItem>
             <SelectItem value="author">Author</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
+      <label htmlFor="search" className="sr-only">
+        Search books
+      </label>
       <Input
+        id="search"
         type="text"
         placeholder="Search"
         required
@@ -68,7 +70,10 @@ const SearchBar = ({
         onChange={(e) => setQuery(e.target.value)}
       />
       <Select onValueChange={(value) => setLimit(value)}>
-        <SelectTrigger className="w-full md:w-[180px] self-start md:self-auto">
+        <SelectTrigger
+          className="w-full md:w-[180px] self-start md:self-auto"
+          aria-label="display number of books"
+        >
           <SelectValue placeholder="Display" />
         </SelectTrigger>
         <SelectContent>
