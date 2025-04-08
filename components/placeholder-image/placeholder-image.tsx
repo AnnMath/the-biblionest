@@ -7,7 +7,7 @@ const PlaceholderImage = () => {
       alt=""
       height={270}
       width={180}
-      className="sepia-30"
+      className="sepia-30 rounded-r-xl"
       priority
     />
   )

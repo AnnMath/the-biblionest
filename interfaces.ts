@@ -44,3 +44,8 @@ export interface Book extends BaseBook {
   }
   subjects?: string[]
 }
+
+export interface ParsedSynopsis {
+  main: string
+  extras: { text: string; href: string }[]
+}

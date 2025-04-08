@@ -13,16 +13,16 @@ const BookListCard = ({ book }: { book: BookLite }) => {
           : `/book/${book.workId}`
       }
     >
-      <Card className="flex flex-col items-center bg-background-100 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <Card className="flex flex-col items-center bg-background-100 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl h-full">
         <Image src="/decoration-2-top.svg" alt="" width={285} height={40} />
         <div className="relative w-[180px] h-[270px] flex items-center justify-center">
           {book.coverUrl ? (
             <Image
               src={book.coverUrl}
-              alt={`${book.title} cover`}
+              alt={`cover of ${book.title}`}
               fill
               sizes="180px"
-              className="object-contain"
+              className="rounded-r-xl"
               placeholder="blur"
               blurDataURL="/placeholder.jpg"
             />
