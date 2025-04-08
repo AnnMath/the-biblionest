@@ -77,7 +77,7 @@ export const fetchBookById = async (
 
     let editionData
 
-    // If there is an edition key, use that
+    // If there is an edition key, use that to get the editionData
     if (editionKey) {
       const editionUrl = `${BASE_URL}/books/${editionKey}.json`
       editionData = await fetchFromAPI(editionUrl)
@@ -90,23 +90,23 @@ export const fetchBookById = async (
 
       if (!editionsData?.entries?.length) return null
 
-      // Find an appropriate edition (preferably English)
       const edition = findAppropriateEdition(editionsData.entries)
       if (!edition) return null
 
-      // Fetch detailed information for the selected edition
+      // Get editionData for the selected edition
       const editionUrl = `${BASE_URL}/${edition.key}.json`
       editionData = await fetchFromAPI(editionUrl)
     }
 
     if (!editionData) return null
 
+    // Get relevant data to build the book object
     const authors = workData?.authors
       ? await fetchAuthorNames(workData.authors)
       : editionData.authors?.map((a: any) => a.name) || ['Unknown Author']
 
     const ratingData = workId
-      ? await fetchFromAPI(`${BASE_URL}/${workId}/ratings.json`)
+      ? await fetchFromAPI(`${BASE_URL}/works/${workId}/ratings.json`)
       : null
 
     const rating = ratingData?.summary
