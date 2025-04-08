@@ -1,5 +1,7 @@
 import { Book, BookFromAPI, BookLite } from '@/interfaces'
 import { SearchType } from '@/types'
+import findAppropriateEdition from '@/utils/helpers/editionHelper'
+import getLanguages from '@/utils/helpers/getLanguageHelper'
 import displayLanguage from '@/utils/helpers/languageHelper'
 
 const BASE_URL = 'https://openlibrary.org'
@@ -50,84 +52,95 @@ export const fetchBooksLite = async (
   return books
 }
 
-// TODO: Change this to a fetchBook details function
-export const fetchBooks = async (
-  query: string,
-  type: SearchType = 'all',
-  limit: string = '20'
-): Promise<Book[]> => {
-  if (!query) return []
-
-  // Make the URL based on type
-  // TODO: These all return the generic works list - ISBN goes to the specific edition, obvs, so I'll probably need a different API call for search by ISBN
-  let searchUrl = `${BASE_URL}/search.json?limit=${limit}`
-  if (type === 'title') {
-    searchUrl += `&title=${encodeURIComponent(query)}`
-  } else if (type === 'author') {
-    searchUrl += `&author=${encodeURIComponent(query)}`
-  } else {
-    searchUrl += `&q=${encodeURIComponent(query)}`
-  }
-
-  const searchData = await fetchFromAPI(searchUrl)
-  if (!searchData?.docs) return []
-
-  // Here we need to search additional details from the data above. ISBNs and such.
-  const books = await Promise.all(
-    searchData.docs.map(async (book: BookFromAPI) => {
-      const workId = book.key // e.g '/works/OL27448W'
-      const workData = await fetchFromAPI(`${BASE_URL}${workId}.json`) // e.g. https://openlibrary.org/works/OL27448W.json
-
-      const editionId =
-        book.cover_edition_key || // preferred - so far, this seems to be on all books but just to be safe, some fallbacks
-        book.lending_edition_s ||
-        (book.ia && book.ia[0])
-
-      const editionData = editionId
-        ? await fetchFromAPI(`${BASE_URL}/books/${editionId}.json`) // e.g. https://openlibrary.org/books/OL51694024M.json
-        : null
-
-      const ratingsData = await fetchFromAPI(
-        `${BASE_URL}${workId}/ratings.json`
+const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
+  const names = await Promise.all(
+    authors.map(async (author) => {
+      const authorData = await fetchFromAPI(
+        `${BASE_URL}${author.author.key}.json`
       )
-
-      const ratingsSummary = ratingsData?.summary
-      const rating = ratingsSummary
-        ? {
-            average: ratingsSummary.average,
-            count: ratingsSummary.count,
-          }
-        : undefined
-
-      const languageCode = editionData?.languages?.[0]?.key?.replace(
-        '/languages/',
-        ''
-      )
-
-      const displayLang = displayLanguage(languageCode)
-
-      return {
-        title: book.title || 'Unknown Title',
-        authors: book.author_name || ['Unknown Author'],
-        workId: workId.replace('/works/', ''),
-        publishYear:
-          book.first_publish_year || workData?.first_publish_date || undefined,
-        synopsis:
-          workData?.description?.value ||
-          workData?.description ||
-          'No synopsis available.',
-        isbn:
-          editionData?.isbn_13?.[0] || editionData?.isbn_10?.[0] || undefined,
-        language: displayLang || 'Unknown',
-        format: editionData?.physical_format || undefined,
-        pages: editionData?.number_of_pages || undefined,
-        coverUrl: book.cover_i
-          ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
-          : undefined,
-        rating: rating,
-        subjects: workData?.subjects,
-      }
+      return authorData?.name || 'Unknown Author'
     })
   )
-  return books
+  return names
+}
+
+export const fetchBookById = async (
+  workId: string,
+  editionKey?: string | null
+): Promise<Book | null> => {
+  try {
+    // fetch the work data
+    const workUrl = `${BASE_URL}/works/${workId}.json`
+    const workData = await fetchFromAPI(workUrl)
+
+    if (!workData) return null
+
+    let editionData
+
+    // If there is an edition key, use that to get the editionData
+    if (editionKey) {
+      const editionUrl = `${BASE_URL}/books/${editionKey}.json`
+      editionData = await fetchFromAPI(editionUrl)
+    }
+
+    // If there's no editionKey find an appropriate edition
+    if (!editionData) {
+      const editionsUrl = `${BASE_URL}/works/${workId}/editions.json` // fetches all editions for a particular work e.g. https://openlibrary.org/works/OL21864981W/editions.json
+      const editionsData = await fetchFromAPI(editionsUrl)
+
+      if (!editionsData?.entries?.length) return null
+
+      const edition = findAppropriateEdition(editionsData.entries)
+      if (!edition) return null
+
+      // Get editionData for the selected edition
+      const editionUrl = `${BASE_URL}/${edition.key}.json`
+      editionData = await fetchFromAPI(editionUrl)
+    }
+
+    if (!editionData) return null
+
+    // Get relevant data to build the book object
+    const authors = workData?.authors
+      ? await fetchAuthorNames(workData.authors)
+      : editionData.authors?.map((a: any) => a.name) || ['Unknown Author']
+
+    const ratingData = workId
+      ? await fetchFromAPI(`${BASE_URL}/works/${workId}/ratings.json`)
+      : null
+
+    const rating = ratingData?.summary
+      ? {
+          average: ratingData.summary.average,
+          count: ratingData.summary.count,
+        }
+      : undefined
+
+    return {
+      title: workData.title,
+      authors,
+      workId,
+      coverUrl: editionData.covers?.[0]
+        ? `https://covers.openlibrary.org/b/id/${editionData.covers[0]}-L.jpg`
+        : undefined,
+      editionKey: editionData.key?.replace('/books/', ''),
+      publishYear:
+        editionData.publish_date || workData?.first_publish_date || undefined,
+      synopsis:
+        workData?.description?.value ||
+        workData?.description ||
+        editionData.description?.value ||
+        editionData.description ||
+        'No synopsis available.',
+      isbn: editionData.isbn_13?.[0] || editionData.isbn_10?.[0] || undefined,
+      language: getLanguages(editionData),
+      format: editionData.physical_format,
+      pages: editionData.number_of_pages,
+      rating,
+      subjects: workData.subjects || [],
+    }
+  } catch (error) {
+    console.error('Error fetching book detail:', error)
+    return null
+  }
 }
