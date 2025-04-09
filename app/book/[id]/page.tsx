@@ -1,4 +1,6 @@
+import BookDetailCard from '@/components/book-details/book-detail-card'
 import { fetchBookById } from '@/lib/api'
+import { notFound } from 'next/navigation'
 
 const BookDetailsPage = async ({
   params,
@@ -12,11 +14,14 @@ const BookDetailsPage = async ({
   const edition = searchParamObj.edition
 
   const book = await fetchBookById(id, edition)
+  // TODO: maybe some better error handling here
+  if (!book) notFound()
+
   console.log(book)
 
   return (
-    <div>
-      <h1 className="text-3xl">Book info here!</h1>
+    <div className="bg-background-300 min-h-screen w-full py-8">
+      <BookDetailCard book={book} />
     </div>
   )
 }
