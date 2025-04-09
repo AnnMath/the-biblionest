@@ -39,9 +39,9 @@ const QuoteCard = () => {
   }, [])
 
   return (
-    <Card className="flex flex-col items-center bg-background-50 w-xs sm:mx-8 md:mx-0 text-text-500 min-w-xs lg:self-end self-center">
+    <article className="flex flex-col items-center justify-center bg-background-50 mx-8 p-4 xl:mx-0 text-text-500 min-w-md min-h-[380px] rounded-xl shadow-md">
       <Image src="/decoration-2-top.svg" alt="" width={142} height={20} />
-      <CardContent>
+      <div className="p-6 text-pretty">
         {!loading && !error && quote && (
           <div className="flex flex-col gap-1.5">
             <p>"{quote.quote}"</p>
@@ -59,9 +59,9 @@ const QuoteCard = () => {
             <p className="text-right italic text-sm">- E. A. Murphy Jr.</p>
           </>
         )}
-      </CardContent>
+      </div>
       <Image src="/decoration-2-bottom.svg" alt="" width={142} height={20} />
-    </Card>
+    </article>
   )
 }
 
