@@ -4,9 +4,9 @@ import BookOrnamentBottom from '../ornaments/book-ornament-bottom'
 
 const HomeScreen = () => {
   return (
-    <div className="max-w-[1280px] bg-background-50 sm:mx-8 p-2 rounded-xl shadow-md">
+    <article className="max-w-[1280px] bg-background-50 sm:mx-8 p-2 rounded-xl shadow-md">
       <BookOrnamentTop />
-      <article className="flex flex-col gap-8 py-8 md:p-8">
+      <section className="flex flex-col gap-8 py-8 md:p-8">
         <h1 className="font-heading font-bold italic text-5xl text-primary-500 text-center">
           Welcome to The BiblioNest!
         </h1>
@@ -29,9 +29,9 @@ const HomeScreen = () => {
           , a project of the Internet Archive working to create{' '}
           <em>one web page for every book ever published</em>.
         </p>
-      </article>
+      </section>
       <BookOrnamentBottom />
-    </div>
+    </article>
   )
 }
 

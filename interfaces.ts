@@ -49,3 +49,10 @@ export interface ParsedSynopsis {
   main: string
   extras: { text: string; href: string }[]
 }
+
+export interface Quote {
+  id: string
+  quote: string
+  book: string
+  author: string
+}

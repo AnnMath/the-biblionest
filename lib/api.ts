@@ -1,8 +1,7 @@
-import { Book, BookFromAPI, BookLite } from '@/interfaces'
+import { Book, BookFromAPI, BookLite, Quote } from '@/interfaces'
 import { SearchType } from '@/types'
 import findAppropriateEdition from '@/utils/helpers/editionHelper'
 import getLanguages from '@/utils/helpers/getLanguageHelper'
-import displayLanguage from '@/utils/helpers/languageHelper'
 
 const BASE_URL = 'https://openlibrary.org'
 
@@ -142,5 +141,20 @@ export const fetchBookById = async (
   } catch (error) {
     console.error('Error fetching book detail:', error)
     return null
+  }
+}
+
+export const fetchQuote = async (): Promise<Quote> => {
+  const URL = 'https://recite-production.up.railway.app/api/v1/random'
+  const response = await fetch(URL)
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+  const result = await response.json()
+  return {
+    id: result._id,
+    quote: result.quote,
+    book: result.book,
+    author: result.author,
   }
 }

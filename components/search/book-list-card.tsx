@@ -14,7 +14,7 @@ const BookListCard = ({ book }: { book: BookLite }) => {
       }
     >
       <Card className="flex flex-col items-center bg-background-100 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl h-full">
-        <Image src="/decoration-2-top.svg" alt="" width={285} height={40} />
+        <Image src="/decoration-2-top.svg" alt="" width={142} height={20} />
         <div className="relative w-[180px] h-[270px] flex items-center justify-center">
           {book.coverUrl ? (
             <Image
@@ -30,7 +30,7 @@ const BookListCard = ({ book }: { book: BookLite }) => {
             <PlaceholderImage />
           )}
         </div>
-        <Image src="/decoration-2-bottom.svg" alt="" width={285} height={40} />
+        <Image src="/decoration-2-bottom.svg" alt="" width={142} height={20} />
         <CardContent className="mt-auto px-4">
           <h2 className="font-bold font-heading text-lg">{book.title} </h2>
 
