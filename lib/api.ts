@@ -5,32 +5,26 @@ import getLanguages from '@/utils/helpers/getLanguageHelper'
 
 const BASE_URL = 'https://openlibrary.org'
 
-// Good to have a global fetch function because we'll need to query the api quite a bit to get all the relevant book info
+/***  LOCAL HELPERS ***/
 const fetchFromAPI = async (url: string) => {
   const res = await fetch(url)
   if (!res.ok) return null
   return res.json()
 }
 
-export const fetchBooksLite = async (
-  query: string,
-  type: SearchType = 'all',
-  limit: string = '20'
-): Promise<BookLite[]> => {
-  if (!query) return []
+const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
+  const names = await Promise.all(
+    authors.map(async (author) => {
+      const authorData = await fetchFromAPI(
+        `${BASE_URL}${author.author.key}.json`
+      )
+      return authorData?.name || 'Unknown Author'
+    })
+  )
+  return names
+}
 
-  let searchUrl = `${BASE_URL}/search.json?limit=${limit}`
-  if (type === 'title') {
-    searchUrl += `&title=${encodeURIComponent(query)}`
-  } else if (type === 'author') {
-    searchUrl += `&author=${encodeURIComponent(query)}`
-  } else {
-    searchUrl += `&q=${encodeURIComponent(query)}`
-  }
-
-  const searchData = await fetchFromAPI(searchUrl)
-  if (!searchData?.docs) return []
-
+const getLiteBooks = (searchData: any) => {
   const books = searchData.docs.map((book: BookFromAPI) => {
     return {
       title: book.title || 'Unknown Title',
@@ -51,16 +45,30 @@ export const fetchBooksLite = async (
   return books
 }
 
-const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
-  const names = await Promise.all(
-    authors.map(async (author) => {
-      const authorData = await fetchFromAPI(
-        `${BASE_URL}${author.author.key}.json`
-      )
-      return authorData?.name || 'Unknown Author'
-    })
-  )
-  return names
+/*** BOOK FETCHES ***/
+
+export const fetchBooksLite = async (
+  query: string,
+  type: SearchType = 'all',
+  limit: string = '20'
+): Promise<BookLite[]> => {
+  if (!query) return []
+
+  let searchUrl = `${BASE_URL}/search.json?limit=${limit}`
+  if (type === 'title') {
+    searchUrl += `&title=${encodeURIComponent(query)}`
+  } else if (type === 'author') {
+    searchUrl += `&author=${encodeURIComponent(query)}`
+  } else {
+    searchUrl += `&q=${encodeURIComponent(query)}`
+  }
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData?.docs) return []
+
+  const books = getLiteBooks(searchData)
+
+  return books
 }
 
 export const fetchBookById = async (
@@ -144,6 +152,18 @@ export const fetchBookById = async (
   }
 }
 
+export const fetchTrending = async (): Promise<BookLite[]> => {
+  let searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData?.docs) return []
+
+  const books = getLiteBooks(searchData)
+
+  return books
+}
+
+/*RANDOM QUOTES*/
 export const fetchQuote = async (): Promise<Quote> => {
   const URL = 'https://recite-production.up.railway.app/api/v1/random'
   const response = await fetch(URL)
