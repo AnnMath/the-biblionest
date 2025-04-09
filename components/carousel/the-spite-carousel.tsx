@@ -59,7 +59,7 @@ const TheSpiteCarousel = ({
                   <Image
                     src={book.coverUrl}
                     alt={`cover of ${book.title}`}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-cover rounded-r-xl"
                     height={270}
                     width={180}
                   />
