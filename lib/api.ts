@@ -1,17 +1,51 @@
-import { Book, BookFromAPI, BookLite } from '@/interfaces'
+import { Book, BookFromAPI, BookLite, Quote } from '@/interfaces'
 import { SearchType } from '@/types'
 import findAppropriateEdition from '@/utils/helpers/editionHelper'
 import getLanguages from '@/utils/helpers/getLanguageHelper'
-import displayLanguage from '@/utils/helpers/languageHelper'
 
 const BASE_URL = 'https://openlibrary.org'
 
-// Good to have a global fetch function because we'll need to query the api quite a bit to get all the relevant book info
+/***  LOCAL HELPERS ***/
 const fetchFromAPI = async (url: string) => {
   const res = await fetch(url)
   if (!res.ok) return null
   return res.json()
 }
+
+const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
+  const names = await Promise.all(
+    authors.map(async (author) => {
+      const authorData = await fetchFromAPI(
+        `${BASE_URL}${author.author.key}.json`
+      )
+      return authorData?.name || 'Unknown Author'
+    })
+  )
+  return names
+}
+
+const getLiteBooks = (searchData: any) => {
+  const books = searchData.map((book: BookFromAPI) => {
+    return {
+      title: book.title || 'Unknown Title',
+      authors: book.author_name || ['Unknown Author'],
+      workId: book.key.replace('/works/', ''),
+      publishYear: book.first_publish_year || undefined,
+      coverUrl: book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+        : undefined,
+      editionKey:
+        book.cover_edition_key ||
+        book.lending_edition_s ||
+        (book.ia && book.ia[0]) ||
+        null,
+    }
+  })
+
+  return books
+}
+
+/*** BOOK FETCHES ***/
 
 export const fetchBooksLite = async (
   query: string,
@@ -32,36 +66,9 @@ export const fetchBooksLite = async (
   const searchData = await fetchFromAPI(searchUrl)
   if (!searchData?.docs) return []
 
-  const books = searchData.docs.map((book: BookFromAPI) => {
-    return {
-      title: book.title || 'Unknown Title',
-      authors: book.author_name || ['Unknown Author'],
-      workId: book.key.replace('/works/', ''),
-      publishYear: book.first_publish_year || undefined,
-      coverUrl: book.cover_i
-        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
-        : undefined,
-      editionKey:
-        book.cover_edition_key ||
-        book.lending_edition_s ||
-        (book.ia && book.ia[0]) ||
-        null,
-    }
-  })
+  const books = getLiteBooks(searchData.docs)
 
   return books
-}
-
-const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
-  const names = await Promise.all(
-    authors.map(async (author) => {
-      const authorData = await fetchFromAPI(
-        `${BASE_URL}${author.author.key}.json`
-      )
-      return authorData?.name || 'Unknown Author'
-    })
-  )
-  return names
 }
 
 export const fetchBookById = async (
@@ -142,5 +149,32 @@ export const fetchBookById = async (
   } catch (error) {
     console.error('Error fetching book detail:', error)
     return null
+  }
+}
+
+export const fetchTrending = async (): Promise<BookLite[]> => {
+  let searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData?.works) return []
+
+  const books = getLiteBooks(searchData.works)
+
+  return books
+}
+
+/*RANDOM QUOTES*/
+export const fetchQuote = async (): Promise<Quote> => {
+  const URL = 'https://recite-production.up.railway.app/api/v1/random'
+  const response = await fetch(URL)
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+  const result = await response.json()
+  return {
+    id: result._id,
+    quote: result.quote,
+    book: result.book,
+    author: result.author,
   }
 }

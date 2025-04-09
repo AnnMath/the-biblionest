@@ -1,13 +1,15 @@
+import HomeScreen from '@/components/home/home-screen'
+import QuoteCard from '@/components/home/quote-card'
+import TrendingCarousel from '@/components/home/trending-carousel'
+
 const Home = () => {
   return (
-    <div className="bg-white h-screen">
-      <h1 className="text-4xl text-primary-500 font-heading italic font-black">
-        The BiblioNest
-      </h1>
-      <p className="font-body">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum, velit
-        sit libero nostrum repudiandae illo eaque suscipit esse corporis atque?
-      </p>
+    <div className="bg-background-300 min-h-screen w-screen py-8 flex flex-col gap-12 items-center">
+      <HomeScreen />
+      <div className="w-full max-w-[1280px] flex flex-col lg:flex-row lg:justify-between gap-4">
+        <QuoteCard />
+        <TrendingCarousel />
+      </div>
     </div>
   )
 }
