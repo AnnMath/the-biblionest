@@ -25,7 +25,7 @@ const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
 }
 
 const getLiteBooks = (searchData: any) => {
-  const books = searchData.docs.map((book: BookFromAPI) => {
+  const books = searchData.map((book: BookFromAPI) => {
     return {
       title: book.title || 'Unknown Title',
       authors: book.author_name || ['Unknown Author'],
@@ -66,7 +66,7 @@ export const fetchBooksLite = async (
   const searchData = await fetchFromAPI(searchUrl)
   if (!searchData?.docs) return []
 
-  const books = getLiteBooks(searchData)
+  const books = getLiteBooks(searchData.docs)
 
   return books
 }
@@ -156,9 +156,9 @@ export const fetchTrending = async (): Promise<BookLite[]> => {
   let searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
 
   const searchData = await fetchFromAPI(searchUrl)
-  if (!searchData?.docs) return []
+  if (!searchData?.works) return []
 
-  const books = getLiteBooks(searchData)
+  const books = getLiteBooks(searchData.works)
 
   return books
 }

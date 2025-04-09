@@ -31,15 +31,15 @@ const QuoteCard = () => {
 
     // TODO: remember to uncomment this.
 
-    // const intervalId = setInterval(() => {
-    //   getNewQuote()
-    // }, 30000)
+    const intervalId = setInterval(() => {
+      getNewQuote()
+    }, 30000)
 
-    // return () => clearInterval(intervalId)
+    return () => clearInterval(intervalId)
   }, [])
 
   return (
-    <Card className="flex flex-col items-center bg-background-50 w-xs sm:mx-8 text-text-500 min-w-xs sm:self-start self-center">
+    <Card className="flex flex-col items-center bg-background-50 w-xs sm:mx-8 md:mx-0 text-text-500 min-w-xs lg:self-end self-center">
       <Image src="/decoration-2-top.svg" alt="" width={142} height={20} />
       <CardContent>
         {!loading && !error && quote && (
