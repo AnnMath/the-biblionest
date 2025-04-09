@@ -26,7 +26,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
           <ShowStarRating rating={book.rating?.average} />{' '}
           <p className="text-sm">
             {book.rating?.average.toFixed(1)} from {book.rating?.count}{' '}
-            {book.rating?.count === 1 ? 'review' : 'reviews'}
+            {book.rating?.count === 1 ? 'rating' : 'ratings'}
           </p>
         </>
       ) : (
