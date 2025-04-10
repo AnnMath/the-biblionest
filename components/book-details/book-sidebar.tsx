@@ -2,6 +2,8 @@ import { Book } from '@/interfaces'
 import Image from 'next/image'
 import PlaceholderImage from '../placeholder-image/placeholder-image'
 import ShowStarRating from '../rating/show-star-rating'
+import FavouriteButton from '../library-interactions/favourite-button'
+import CustomToast from '../custom-toast/custom-toast'
 
 const BookSidebar = ({ book }: { book: Book }) => {
   return (
@@ -32,6 +34,12 @@ const BookSidebar = ({ book }: { book: Book }) => {
       ) : (
         <p className="text-sm">No ratings yet</p>
       )}
+      <FavouriteButton
+        title={book.title}
+        authors={book.authors}
+        coverUrl={book.coverUrl}
+        workId={book.workId}
+      />
     </aside>
   )
 }

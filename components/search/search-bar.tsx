@@ -65,6 +65,7 @@ const SearchBar = ({
         type="text"
         placeholder="Search"
         required
+        autoComplete="off"
         className="bg-background-50"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

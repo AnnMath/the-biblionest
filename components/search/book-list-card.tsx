@@ -34,7 +34,7 @@ const BookListCard = ({ book }: { book: BookLite }) => {
         <CardContent className="mt-auto px-4">
           <h2 className="font-bold font-heading text-lg">{book.title} </h2>
 
-          {book.authors && <p>By {book.authors.join(', ')}</p>}
+          {book.authors && <p>By {book.authors[0]}</p>}
         </CardContent>
       </Card>
     </Link>
