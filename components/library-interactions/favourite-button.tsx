@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 import CustomToast from '../custom-toast/custom-toast'
+import { Heart } from 'lucide-react'
 
 interface FavouriteButtonProps {
   title: string
@@ -122,7 +123,9 @@ const FavouriteButton = ({
 
   const handleClick = async () => {
     if (!isLoggedIn) {
-      toast(<CustomToast message="Please log in to add to favourites!" />)
+      toast(<CustomToast message="Please log in to add to favourites!" />, {
+        unstyled: true,
+      })
       return
     }
 
@@ -149,10 +152,28 @@ const FavouriteButton = ({
   }
   return (
     <>
-      <Button onClick={handleClick} disabled={isLoadingFavouriteStatus}>
-        {isFavourite ? 'Favourited' : 'Add to favourites'}
+      <Button
+        onClick={handleClick}
+        disabled={isLoadingFavouriteStatus}
+        variant="outline"
+      >
+        {isFavourite ? (
+          <>
+            <Heart className="text-rose-500" fill="oklch(64.5% 0.246 16.439)" />
+            In favourites
+          </>
+        ) : (
+          <>
+            <Heart />
+            Add to favourites
+          </>
+        )}
       </Button>
-      <Toaster position="bottom-center" />
+      <Toaster
+        position="bottom-center"
+        containerAriaLabel="please log in"
+        theme="light"
+      />
     </>
   )
 }
