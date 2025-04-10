@@ -91,7 +91,7 @@ const Header = () => {
         setTimeout(() => {
           router.push('/')
           router.refresh()
-        }, 300) // Small delay for better UX
+        }, 100) // Small delay for better UX
       }
     } catch (err) {
       console.error('Unexpected error during sign out:', err)
