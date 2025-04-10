@@ -149,6 +149,16 @@ const FavouriteButton = ({
     }
 
     setIsFavourite(!isFavourite)
+
+    if (isFavourite) {
+      toast(<CustomToast message="Removed from favourites" />, {
+        unstyled: true,
+      })
+    } else {
+      toast(<CustomToast message="Added to favourites" />, {
+        unstyled: true,
+      })
+    }
   }
   return (
     <>
