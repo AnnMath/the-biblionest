@@ -1,6 +1,5 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
 import { Bookmark } from 'lucide-react'
 import { Button } from '../ui/button'
 import { BookButtonProps } from '@/interfaces'
@@ -14,8 +13,6 @@ const WishListButton = ({
   coverUrl,
   workId,
 }: BookButtonProps) => {
-  const supabase = createClient()
-
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
   const {
