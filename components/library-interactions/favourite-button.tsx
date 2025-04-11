@@ -1,13 +1,11 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
 import { Button } from '../ui/button'
-import { toast } from 'sonner'
-import CustomToast from '../custom-toast/custom-toast'
 import { Heart } from 'lucide-react'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
+import { handleBookStatusToggle } from './handleBookStatusToggle'
 
 const FavouriteButton = ({
   title,
@@ -15,8 +13,6 @@ const FavouriteButton = ({
   coverUrl,
   workId,
 }: BookButtonProps) => {
-  const supabase = createClient()
-
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
   const {
@@ -34,59 +30,20 @@ const FavouriteButton = ({
   })
 
   const handleClick = async () => {
-    if (!isLoggedIn) {
-      toast(
-        <CustomToast
-          message="Please log in to add to favourites!"
-          color="bg-info-500/70"
-        />,
-        {
-          unstyled: true,
-        }
-      )
-      return
-    }
-
-    if (!userId || !bookId) {
-      console.warn('Missing user or book ID — cannot toggle favourite.')
-      return
-    }
-
-    const { error } = await supabase.from('user_books').upsert(
-      {
-        user_id: userId,
-        book_id: bookId,
-        is_favourite: !isFavourite,
+    await handleBookStatusToggle({
+      isLoggedIn,
+      userId,
+      bookId,
+      column: 'is_favourite',
+      currentValue: isFavourite,
+      setValue: setIsFavourite,
+      toastMessages: {
+        on: 'Added to favourites',
+        off: 'Removed from favourites',
       },
-      { onConflict: 'user_id,book_id' }
-    )
-
-    if (error) {
-      console.error('Error toggling favourite:', error.message)
-      return
-    }
-
-    setIsFavourite(!isFavourite)
-
-    if (isFavourite) {
-      toast(
-        <CustomToast
-          message="Removed from favourites"
-          color="bg-info-200/70"
-        />,
-        {
-          unstyled: true,
-        }
-      )
-    } else {
-      toast(
-        <CustomToast message="Added to favourites" color="bg-info-200/70" />,
-        {
-          unstyled: true,
-        }
-      )
-    }
+    })
   }
+
   return (
     <>
       <Button
