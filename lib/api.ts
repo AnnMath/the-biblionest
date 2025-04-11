@@ -153,7 +153,7 @@ export const fetchBookById = async (
 }
 
 export const fetchTrending = async (): Promise<BookLite[]> => {
-  let searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
+  let searchUrl = `${BASE_URL}/trending/now.json?limit=10`
 
   const searchData = await fetchFromAPI(searchUrl)
   if (!searchData?.works) return []

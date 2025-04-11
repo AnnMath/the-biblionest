@@ -1,13 +1,13 @@
 'use client'
 
+import { Bookmark } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Heart } from 'lucide-react'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const FavouriteButton = ({
+const WishListButton = ({
   title,
   authors,
   coverUrl,
@@ -17,8 +17,8 @@ const FavouriteButton = ({
 
   const {
     bookId,
-    statusValue: isFavourite,
-    setStatusValue: setIsFavourite,
+    statusValue: isInWishList,
+    setStatusValue: setIsInWishList,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -26,7 +26,7 @@ const FavouriteButton = ({
     authors,
     coverUrl,
     userId,
-    column: 'is_favourite',
+    column: 'is_in_wishlist',
   })
 
   const handleClick = async () => {
@@ -34,16 +34,15 @@ const FavouriteButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'is_favourite',
-      currentValue: isFavourite,
-      setValue: setIsFavourite,
+      column: 'is_in_wishlist',
+      currentValue: isInWishList,
+      setValue: setIsInWishList,
       toastMessages: {
-        on: 'Added to favourites',
-        off: 'Removed from favourites',
+        on: 'Added to wishlist',
+        off: 'Removed from wishlist',
       },
     })
   }
-
   return (
     <>
       <Button
@@ -51,15 +50,18 @@ const FavouriteButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {isFavourite ? (
+        {isInWishList ? (
           <>
-            <Heart className="text-rose-500" fill="oklch(64.5% 0.246 16.439)" />
-            In favourites
+            <Bookmark
+              className="text-accent-500"
+              fill=" oklch(64.9% 0.12 35.14)"
+            />
+            In wishlist
           </>
         ) : (
           <>
-            <Heart />
-            Add to favourites
+            <Bookmark />
+            Add to wishlist
           </>
         )}
       </Button>
@@ -67,4 +69,4 @@ const FavouriteButton = ({
   )
 }
 
-export default FavouriteButton
+export default WishListButton

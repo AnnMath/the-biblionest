@@ -56,3 +56,10 @@ export interface Quote {
   book: string
   author: string
 }
+
+export interface BookButtonProps {
+  title: string
+  authors: string[]
+  coverUrl: string | undefined
+  workId: string
+}
