@@ -2,12 +2,12 @@
 
 import { createClient } from '@/utils/supabase/client'
 import { Button } from '../ui/button'
-import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import CustomToast from '../custom-toast/custom-toast'
 import { Heart } from 'lucide-react'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
+import { useBookStatus } from '@/lib/hooks/useBookStatus'
 
 const FavouriteButton = ({
   title,
@@ -17,64 +17,21 @@ const FavouriteButton = ({
 }: BookButtonProps) => {
   const supabase = createClient()
 
-  const [bookId, setBookId] = useState<string | null>(null)
-  const [isFavourite, setIsFavourite] = useState<boolean>(false)
-  const [isBookStatusLoading, setIsBookStatusLoading] = useState(true)
-
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
-  const checkIfFavourited = async () => {
-    if (!userId) {
-      setIsBookStatusLoading(false)
-      return
-    }
-
-    // check if the book exists in the book table. If not, insert it and get the book_id
-    const { data: bookData, error: bookError } = await supabase
-      .from('books')
-      .upsert(
-        {
-          title,
-          author_names: authors.join(', '),
-          cover_url: coverUrl,
-          work_id: workId,
-        },
-        { onConflict: 'work_id' }
-      )
-      .select('id')
-      .single()
-
-    if (bookError || !bookData) {
-      console.error('Error fetching/inserting book:', bookError?.message)
-      setIsBookStatusLoading(false)
-      return
-    }
-
-    setBookId(bookData.id)
-
-    //  check if the user has favourited this book
-    const { data: userBookData, error: userBookError } = await supabase
-      .from('user_books')
-      .select('is_favourite')
-      .eq('user_id', userId)
-      .eq('book_id', bookData.id) // use the value directly here
-      .maybeSingle()
-
-    if (userBookError) {
-      console.log('No user_book entry yet, not favourited')
-      setIsFavourite(false)
-    } else {
-      setIsFavourite(userBookData?.is_favourite || false)
-    }
-
-    setIsBookStatusLoading(false)
-  }
-
-  useEffect(() => {
-    if (userId) {
-      checkIfFavourited()
-    }
-  }, [userId])
+  const {
+    bookId,
+    statusValue: isFavourite,
+    setStatusValue: setIsFavourite,
+    isBookStatusLoading,
+  } = useBookStatus({
+    workId,
+    title,
+    authors,
+    coverUrl,
+    userId,
+    column: 'is_favourite',
+  })
 
   const handleClick = async () => {
     if (!isLoggedIn) {
