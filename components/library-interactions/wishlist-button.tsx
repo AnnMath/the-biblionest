@@ -52,10 +52,7 @@ const WishListButton = ({
       >
         {isInWishList ? (
           <>
-            <Bookmark
-              className="text-accent-500"
-              fill="oklch(64.9% 0.12 35.14)"
-            />
+            <Bookmark fill="oklch(77% 0.13 85)" />
             In wishlist
           </>
         ) : (

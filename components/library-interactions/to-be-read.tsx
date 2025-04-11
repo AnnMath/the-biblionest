@@ -1,13 +1,13 @@
 'use client'
 
-import { LibraryBig } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 import { Button } from '../ui/button'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const HasBookButton = ({
+const ToBeReadButton = ({
   title,
   authors,
   coverUrl,
@@ -17,8 +17,8 @@ const HasBookButton = ({
 
   const {
     bookId,
-    statusValue: hasBook,
-    setStatusValue: setHasBook,
+    statusValue: toBeRead,
+    setStatusValue: setToBeRead,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -26,7 +26,7 @@ const HasBookButton = ({
     authors,
     coverUrl,
     userId,
-    column: 'has_book',
+    column: 'to_be_read',
   })
 
   const handleClick = async () => {
@@ -34,12 +34,12 @@ const HasBookButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'has_book',
-      currentValue: hasBook,
-      setValue: setHasBook,
+      column: 'to_be_read',
+      currentValue: toBeRead,
+      setValue: setToBeRead,
       toastMessages: {
-        on: 'Added to your bookshelf',
-        off: 'Removed from your bookshelf',
+        on: 'Added to your to-read pile',
+        off: 'Removed from to-read pile',
       },
     })
   }
@@ -50,14 +50,14 @@ const HasBookButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {hasBook ? (
+        {toBeRead ? (
           <>
-            <LibraryBig fill="oklch(0.63 0.045 50)" />I own this
+            <BookOpen fill="oklch(0.73 0.05 80)" />I want to read this
           </>
         ) : (
           <>
-            <LibraryBig />
-            Mark as owned
+            <BookOpen />
+            Put in to-read pile
           </>
         )}
       </Button>
@@ -65,4 +65,4 @@ const HasBookButton = ({
   )
 }
 
-export default HasBookButton
+export default ToBeReadButton
