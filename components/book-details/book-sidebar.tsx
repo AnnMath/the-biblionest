@@ -5,6 +5,7 @@ import ShowStarRating from '../rating/show-star-rating'
 import { Toaster } from '@/components/ui/sonner'
 import FavouriteButton from '../library-interactions/favourite-button'
 import WishListButton from '../library-interactions/wishlist-button'
+import HasBookButton from '../library-interactions/has-book-button'
 
 const BookSidebar = ({ book }: { book: Book }) => {
   return (
@@ -42,6 +43,12 @@ const BookSidebar = ({ book }: { book: Book }) => {
         workId={book.workId}
       />
       <WishListButton
+        title={book.title}
+        authors={book.authors}
+        coverUrl={book.coverUrl}
+        workId={book.workId}
+      />
+      <HasBookButton
         title={book.title}
         authors={book.authors}
         coverUrl={book.coverUrl}

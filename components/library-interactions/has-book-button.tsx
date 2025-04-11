@@ -1,13 +1,13 @@
 'use client'
 
-import { Bookmark } from 'lucide-react'
+import { LibraryBig } from 'lucide-react'
 import { Button } from '../ui/button'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const WishListButton = ({
+const HasBookButton = ({
   title,
   authors,
   coverUrl,
@@ -17,8 +17,8 @@ const WishListButton = ({
 
   const {
     bookId,
-    statusValue: isInWishList,
-    setStatusValue: setIsInWishList,
+    statusValue: hasBook,
+    setStatusValue: setHasBook,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -26,7 +26,7 @@ const WishListButton = ({
     authors,
     coverUrl,
     userId,
-    column: 'is_in_wishlist',
+    column: 'has_book',
   })
 
   const handleClick = async () => {
@@ -34,12 +34,12 @@ const WishListButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'is_in_wishlist',
-      currentValue: isInWishList,
-      setValue: setIsInWishList,
+      column: 'has_book',
+      currentValue: hasBook,
+      setValue: setHasBook,
       toastMessages: {
-        on: 'Added to wishlist',
-        off: 'Removed from wishlist',
+        on: 'Added to your bookshelf',
+        off: 'Removed from your bookshelf',
       },
     })
   }
@@ -50,18 +50,13 @@ const WishListButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {isInWishList ? (
+        {hasBook ? (
           <>
-            <Bookmark
-              className="text-accent-500"
-              fill="oklch(64.9% 0.12 35.14)"
-            />
-            In wishlist
+            <LibraryBig fill="oklch(64.9% 0.12 35.14)" />I own this
           </>
         ) : (
           <>
-            <Bookmark />
-            Add to wishlist
+            <LibraryBig />I don't own this
           </>
         )}
       </Button>
@@ -69,4 +64,4 @@ const WishListButton = ({
   )
 }
 
-export default WishListButton
+export default HasBookButton
