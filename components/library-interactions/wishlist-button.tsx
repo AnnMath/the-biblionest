@@ -1,15 +1,12 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react'
-import { Toaster } from '@/components/ui/sonner'
-import { toast } from 'sonner'
-import CustomToast from '../custom-toast/custom-toast'
-import { Heart } from 'lucide-react'
+import { Bookmark } from 'lucide-react'
 import { Button } from '../ui/button'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
+import { handleBookStatusToggle } from './handleBookStatusToggle'
 
 const WishListButton = ({
   title,
@@ -34,7 +31,45 @@ const WishListButton = ({
     userId,
     column: 'is_in_wishlist',
   })
-  return <Button variant="outline">Add to wishlist</Button>
+
+  const handleClick = async () => {
+    await handleBookStatusToggle({
+      isLoggedIn,
+      userId,
+      bookId,
+      column: 'is_in_wishlist',
+      currentValue: isInWishList,
+      setValue: setIsInWishList,
+      toastMessages: {
+        on: 'Added to wishlist',
+        off: 'Removed from wishlist',
+      },
+    })
+  }
+  return (
+    <>
+      <Button
+        onClick={handleClick}
+        disabled={isSessionLoading || isBookStatusLoading}
+        variant="outline"
+      >
+        {isInWishList ? (
+          <>
+            <Bookmark
+              className="text-accent-500"
+              fill=" oklch(64.9% 0.12 35.14)"
+            />
+            In wishlist
+          </>
+        ) : (
+          <>
+            <Bookmark />
+            Add to wishlist
+          </>
+        )}
+      </Button>
+    </>
+  )
 }
 
 export default WishListButton
