@@ -3,52 +3,29 @@
 import { createClient } from '@/utils/supabase/client'
 import { Button } from '../ui/button'
 import { useEffect, useState } from 'react'
-import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 import CustomToast from '../custom-toast/custom-toast'
 import { Heart } from 'lucide-react'
-
-interface FavouriteButtonProps {
-  title: string
-  authors: string[]
-  coverUrl: string | undefined
-  workId: string
-}
+import { BookButtonProps } from '@/interfaces'
+import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 
 const FavouriteButton = ({
   title,
   authors,
   coverUrl,
   workId,
-}: FavouriteButtonProps) => {
+}: BookButtonProps) => {
   const supabase = createClient()
 
-  const [userId, setUserId] = useState<string | undefined>(undefined)
   const [bookId, setBookId] = useState<string | null>(null)
   const [isFavourite, setIsFavourite] = useState<boolean>(false)
-  const [isLoadingFavouriteStatus, setIsLoadingFavouriteStatus] = useState(true)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isBookStatusLoading, setIsBookStatusLoading] = useState(true)
 
-  const getSession = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-
-    if (!session?.user) {
-      console.log('Not logged in')
-      setIsLoggedIn(false)
-      setUserId(undefined)
-      setIsLoadingFavouriteStatus(false)
-      return
-    }
-
-    setUserId(session?.user.id)
-    setIsLoggedIn(true)
-  }
+  const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
   const checkIfFavourited = async () => {
     if (!userId) {
-      setIsLoadingFavouriteStatus(false)
+      setIsBookStatusLoading(false)
       return
     }
 
@@ -69,7 +46,7 @@ const FavouriteButton = ({
 
     if (bookError || !bookData) {
       console.error('Error fetching/inserting book:', bookError?.message)
-      setIsLoadingFavouriteStatus(false)
+      setIsBookStatusLoading(false)
       return
     }
 
@@ -90,30 +67,8 @@ const FavouriteButton = ({
       setIsFavourite(userBookData?.is_favourite || false)
     }
 
-    setIsLoadingFavouriteStatus(false)
+    setIsBookStatusLoading(false)
   }
-
-  useEffect(() => {
-    getSession()
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setIsLoggedIn(true)
-        setUserId(session.user.id)
-      } else {
-        setIsLoggedIn(false)
-        setUserId(undefined)
-        setBookId(null)
-        setIsFavourite(false)
-      }
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
 
   useEffect(() => {
     if (userId) {
@@ -179,7 +134,7 @@ const FavouriteButton = ({
     <>
       <Button
         onClick={handleClick}
-        disabled={isLoadingFavouriteStatus}
+        disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
         {isFavourite ? (
@@ -194,11 +149,6 @@ const FavouriteButton = ({
           </>
         )}
       </Button>
-      <Toaster
-        position="bottom-center"
-        containerAriaLabel="please log in"
-        theme="light"
-      />
     </>
   )
 }
