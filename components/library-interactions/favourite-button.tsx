@@ -53,7 +53,7 @@ const FavouriteButton = ({
       >
         {isFavourite ? (
           <>
-            <Heart className="text-rose-500" fill="oklch(64.5% 0.246 16.439)" />
+            <Heart fill="oklch(65% 0.16 18)" />
             In favourites
           </>
         ) : (

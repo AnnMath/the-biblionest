@@ -1,13 +1,13 @@
 'use client'
 
-import { LibraryBig } from 'lucide-react'
+import { Book, BookCheck } from 'lucide-react'
 import { Button } from '../ui/button'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const HasBookButton = ({
+const HasReadButton = ({
   title,
   authors,
   coverUrl,
@@ -17,8 +17,8 @@ const HasBookButton = ({
 
   const {
     bookId,
-    statusValue: hasBook,
-    setStatusValue: setHasBook,
+    statusValue: hasRead,
+    setStatusValue: setHasRead,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -26,7 +26,7 @@ const HasBookButton = ({
     authors,
     coverUrl,
     userId,
-    column: 'has_book',
+    column: 'has_read',
   })
 
   const handleClick = async () => {
@@ -34,12 +34,12 @@ const HasBookButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'has_book',
-      currentValue: hasBook,
-      setValue: setHasBook,
+      column: 'has_read',
+      currentValue: hasRead,
+      setValue: setHasRead,
       toastMessages: {
-        on: 'Added to your bookshelf',
-        off: 'Removed from your bookshelf',
+        on: 'Added to your read pile',
+        off: 'Removed from your read pile',
       },
     })
   }
@@ -50,14 +50,15 @@ const HasBookButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {hasBook ? (
+        {hasRead ? (
           <>
-            <LibraryBig fill="oklch(0.63 0.045 50)" />I own this
+            <BookCheck fill="oklch(0.66 0.04 140)" />
+            I've read this
           </>
         ) : (
           <>
-            <LibraryBig />
-            Mark as owned
+            <Book />
+            Mark as read
           </>
         )}
       </Button>
@@ -65,4 +66,4 @@ const HasBookButton = ({
   )
 }
 
-export default HasBookButton
+export default HasReadButton
