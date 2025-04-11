@@ -123,9 +123,15 @@ const FavouriteButton = ({
 
   const handleClick = async () => {
     if (!isLoggedIn) {
-      toast(<CustomToast message="Please log in to add to favourites!" />, {
-        unstyled: true,
-      })
+      toast(
+        <CustomToast
+          message="Please log in to add to favourites!"
+          color="bg-info-500/70"
+        />,
+        {
+          unstyled: true,
+        }
+      )
       return
     }
 
@@ -151,13 +157,22 @@ const FavouriteButton = ({
     setIsFavourite(!isFavourite)
 
     if (isFavourite) {
-      toast(<CustomToast message="Removed from favourites" />, {
-        unstyled: true,
-      })
+      toast(
+        <CustomToast
+          message="Removed from favourites"
+          color="bg-info-200/70"
+        />,
+        {
+          unstyled: true,
+        }
+      )
     } else {
-      toast(<CustomToast message="Added to favourites" />, {
-        unstyled: true,
-      })
+      toast(
+        <CustomToast message="Added to favourites" color="bg-info-200/70" />,
+        {
+          unstyled: true,
+        }
+      )
     }
   }
   return (
