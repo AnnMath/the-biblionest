@@ -76,7 +76,6 @@ const Search = () => {
     )
   }
 
-  // Determine what to display
   const showNoResults =
     !loading && !error && books.length === 0 && queryParam && searchCompleted
 
