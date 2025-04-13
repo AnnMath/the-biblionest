@@ -1,9 +1,33 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { fetchTrending } from '@/lib/api'
 import TheSpiteCarousel from '../carousel/the-spite-carousel'
+import { BookLite } from '@/interfaces'
+import TrendingCarouselSkeleton from '../loading/trending-carousel-skeleton'
 
-// good lord, I hate the ShadCN carousel so much, so I'm gonna make my own
-const TrendingCarousel = async () => {
-  const books = await fetchTrending()
+const TrendingCarousel = () => {
+  const [books, setBooks] = useState<BookLite[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadTrending = async () => {
+      try {
+        const trending = await fetchTrending()
+        setBooks(trending)
+      } catch (error) {
+        console.error('Failed to fetch trending books:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTrending()
+  }, [])
+
+  if (loading) {
+    return <TrendingCarouselSkeleton />
+  }
 
   return (
     <div className="w-full max-w-3xl">

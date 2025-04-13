@@ -25,12 +25,14 @@ const Search = () => {
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [searchCompleted, setSearchCompleted] = useState(false)
 
   useEffect(() => {
     if (queryParam.trim()) {
       handleFetch(queryParam, typeParam, limitParam)
     } else {
       setBooks([])
+      setSearchCompleted(false)
     }
   }, [queryParam, typeParam, limitParam])
 
@@ -41,6 +43,7 @@ const Search = () => {
   ) => {
     setLoading(true)
     setError(null)
+    setSearchCompleted(false)
 
     try {
       const results = await fetchBooksLite(query, type, limit)
@@ -51,6 +54,7 @@ const Search = () => {
       setError('Something went wrong while fetching books.')
     } finally {
       setLoading(false)
+      setSearchCompleted(true)
     }
   }
 
@@ -59,6 +63,11 @@ const Search = () => {
     type: SearchType = 'all',
     limit: string = '20'
   ) => {
+    // If the search parameters haven't changed, don't trigger a new search
+    if (query === searchQuery && type === searchType && limit === searchLimit) {
+      return
+    }
+
     setSearchQuery(query)
     setSearchType(type)
     setSearchLimit(limit)
@@ -66,6 +75,11 @@ const Search = () => {
       `/search?q=${encodeURIComponent(query)}&type=${type}&limit=${limit}`
     )
   }
+
+  // Determine what to display
+  const showNoResults =
+    !loading && !error && books.length === 0 && queryParam && searchCompleted
+
   return (
     <div className="bg-background-300">
       <SearchBar
@@ -74,20 +88,19 @@ const Search = () => {
         initialType={searchType}
         initialLimit={searchLimit}
       />
-      {loading && (
-        <>
-          <LoadingDecoration />
-          <BookListSkeleton />
-        </>
-      )}
+
+      {loading && <BookListSkeleton />}
+
       {!loading && error && (
         <div className="text-center mt-8 text-red-500">{error}</div>
       )}
-      {!loading && !error && books.length === 0 && queryParam && (
+
+      {showNoResults && (
         <div className="text-center mt-8">
           No books found for "{queryParam}"
         </div>
       )}
+
       {!loading && books.length > 0 && <BookList books={books} />}
     </div>
   )
