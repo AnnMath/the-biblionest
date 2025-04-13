@@ -4,7 +4,7 @@ import BookOrnamentBottom from '../ornaments/book-ornament-bottom'
 
 const HomeScreen = () => {
   return (
-    <article className="max-w-[1280px] bg-background-50 mx-8 p-4 rounded-xl shadow-md">
+    <article className="max-w-[1280px] bg-background-50 mx-8 p-4 rounded-xl shadow-md min-w-[320px]">
       <BookOrnamentTop />
       <section className="flex flex-col gap-8 py-8 md:p-8">
         <h1 className="font-heading font-bold italic text-5xl text-primary-500 text-center">
