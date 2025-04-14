@@ -14,7 +14,7 @@ import LibraryBookCard from './library-book-card'
 
 const MyLibrary = () => {
   const supabase = createClient()
-  const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
+  const { userId } = useSessionStatus()
 
   const [activeTab, setActiveTab] = useState<BookStatusColumn>('is_favourite')
   const [books, setBooks] = useState<UserBookEntry[]>([])
