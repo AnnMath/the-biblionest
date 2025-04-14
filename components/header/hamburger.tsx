@@ -3,30 +3,25 @@
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import { useState } from 'react'
-import { Profile } from '@/interfaces'
 import { CircleUserRound, LogOut } from 'lucide-react'
+import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 
 interface HamburgerProps {
-  profile: Profile | null
-  loading: boolean
   onSignInClick: () => void
   onSignOutClick: () => void
 }
 
-const Hamburger = ({
-  profile,
-  loading,
-  onSignInClick,
-  onSignOutClick,
-}: HamburgerProps) => {
+const Hamburger = ({ onSignInClick, onSignOutClick }: HamburgerProps) => {
   const [isOpen, setIsOpen] = useState(false)
+
+  const { isLoggedIn, isSessionLoading, displayName } = useSessionStatus()
 
   const handleClick = () => {
     setIsOpen(!isOpen)
   }
 
   const handleAuthClick = () => {
-    if (profile) {
+    if (isLoggedIn) {
       onSignOutClick()
     } else {
       onSignInClick()
@@ -65,17 +60,16 @@ const Hamburger = ({
       </button>
       {isOpen && (
         <article className="w-screen h-screen gap-16 absolute z-10 top-32 left-0 pt-8 bg-secondary-500 text-text-500 text-4xl font-heading font-bold italic flex flex-col items-center p-4">
-          {!loading && (
+          {!isSessionLoading && (
             <div>
-              {profile && (
+              {isLoggedIn && (
                 <Link href="/profile">
                   <Button
                     variant="link"
                     className="text-base"
                     onClick={handleClick}
                   >
-                    <CircleUserRound /> {profile?.display_name || 'Reader'}'s
-                    profile
+                    <CircleUserRound /> {displayName || 'Reader'}'s profile
                   </Button>
                 </Link>
               )}
@@ -84,7 +78,7 @@ const Hamburger = ({
                 className="text-base flex items-center gap-2"
                 onClick={handleAuthClick}
               >
-                {profile ? (
+                {isLoggedIn ? (
                   <>
                     <LogOut />
                     Log out

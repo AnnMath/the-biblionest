@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client'
 export const useSessionStatus = () => {
   const supabase = createClient()
   const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [displayName, setDisplayName] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isSessionLoading, setIsSessionLoading] = useState(true)
 
@@ -18,9 +19,22 @@ export const useSessionStatus = () => {
       if (!session?.user) {
         setIsLoggedIn(false)
         setUserId(undefined)
-      } else {
-        setUserId(session.user.id)
-        setIsLoggedIn(true)
+        setDisplayName(null)
+        setIsSessionLoading(false)
+        return
+      }
+
+      setUserId(session.user.id)
+      setIsLoggedIn(true)
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('display_name')
+        .eq('id', session.user.id)
+        .single()
+
+      if (!error && data) {
+        setDisplayName(data.display_name)
       }
 
       setIsSessionLoading(false)
@@ -34,9 +48,11 @@ export const useSessionStatus = () => {
       if (session?.user) {
         setIsLoggedIn(true)
         setUserId(session.user.id)
+        fetchSession()
       } else {
         setIsLoggedIn(false)
         setUserId(undefined)
+        setDisplayName(null)
       }
     })
 
@@ -45,5 +61,5 @@ export const useSessionStatus = () => {
     }
   }, [supabase])
 
-  return { userId, isLoggedIn, isSessionLoading }
+  return { userId, displayName, isLoggedIn, isSessionLoading }
 }
