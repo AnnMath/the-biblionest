@@ -17,8 +17,6 @@ const LibraryBookCard = ({ book, status = {} }: LibraryBookCardProps) => {
   const { is_favourite, is_in_wishlist, has_book, has_read, to_be_read } =
     status
 
-  console.log('Card:', book.title, book.editionKey)
-
   return (
     <Link
       href={
