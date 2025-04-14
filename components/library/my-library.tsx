@@ -8,7 +8,6 @@ import { createClient } from '@/utils/supabase/client'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useEffect, useState } from 'react'
 import { BookStatusColumn, UserBookEntry } from '@/types'
-import BookListCard from '../search/book-list-card'
 import { BookLite } from '@/interfaces'
 import LibraryBookCard from './library-book-card'
 
