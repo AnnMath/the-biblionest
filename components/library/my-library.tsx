@@ -100,11 +100,11 @@ const MyLibrary = () => {
             Loading your library...
           </p>
         ) : filteredBooks.length === 0 ? (
-          <p className="text-center italic text-muted-foreground">
+          <p className="text-center italic text-secondary-500">
             Nothing here yet — time to build your nest!
           </p>
         ) : (
-          <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+          <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
             {filteredBooks.map((entry) => (
               <LibraryBookCard
                 key={entry.book_id}

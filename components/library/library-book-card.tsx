@@ -1,5 +1,3 @@
-'use client'
-
 import { BookLite } from '@/interfaces'
 import { BookCheck, Bookmark, BookOpen, Heart, LibraryBig } from 'lucide-react'
 import Link from 'next/link'
