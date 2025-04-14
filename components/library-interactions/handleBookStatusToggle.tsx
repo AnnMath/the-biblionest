@@ -1,12 +1,13 @@
 import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import CustomToast from '@/components/custom-toast/custom-toast'
+import { BookStatusColumn } from '@/types'
 
 interface ToggleProps {
   isLoggedIn: boolean
   userId?: string
   bookId: string | null
-  column: 'is_favourite' | 'is_in_wishlist' | 'has_read' | string
+  column: BookStatusColumn
   currentValue: boolean
   setValue: (val: boolean) => void
   toastMessages: {

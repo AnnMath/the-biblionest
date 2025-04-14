@@ -26,7 +26,6 @@ const QuoteCard = ({ initialQuote }: { initialQuote: Quote | null }) => {
     const intervalId = setInterval(() => {
       getNewQuote()
     }, 30000)
-    console.log(initialQuote)
     return () => clearInterval(intervalId)
   }, [])
 

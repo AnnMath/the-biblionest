@@ -37,7 +37,7 @@ const Hamburger = ({
 
   const links = [
     { title: 'Explore', href: '/search' },
-    { title: 'My Books', href: '/library' },
+    { title: 'My library', href: '/library' },
   ]
 
   return (

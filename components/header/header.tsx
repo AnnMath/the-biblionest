@@ -145,7 +145,7 @@ const Header = () => {
         </li>
         <li>
           <Link href="/library" className="hover:underline">
-            Library
+            My library
           </Link>
         </li>
       </ul>

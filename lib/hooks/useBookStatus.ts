@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-
-type UserBookStatusColumn =
-  | 'is_favourite'
-  | 'is_in_wishlist'
-  | 'has_read'
-  | 'has_book'
-  | 'to_be_read'
+import { BookStatusColumn } from '@/types'
 
 interface UseBookStatusProps {
   workId: string
   title: string
   authors: string[]
   coverUrl: string | undefined
+  editionKey?: string | null | undefined
   userId?: string
-  column: UserBookStatusColumn
+  column: BookStatusColumn
 }
 
 export const useBookStatus = ({
@@ -22,6 +17,7 @@ export const useBookStatus = ({
   title,
   authors,
   coverUrl,
+  editionKey,
   userId,
   column,
 }: UseBookStatusProps) => {
@@ -46,6 +42,7 @@ export const useBookStatus = ({
             author_names: authors.join(', '),
             cover_url: coverUrl,
             work_id: workId,
+            edition_key: editionKey,
           },
           { onConflict: 'work_id' }
         )
