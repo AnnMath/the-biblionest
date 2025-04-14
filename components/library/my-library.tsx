@@ -36,7 +36,8 @@ const MyLibrary = () => {
                     title,
                     author_names,
                     cover_url,
-                    work_id
+                    work_id,
+                    edition_key
                 )
                 `
         )
@@ -62,6 +63,7 @@ const MyLibrary = () => {
       [],
     coverUrl: entry.book.cover_url,
     workId: entry.book.work_id,
+    editionKey: entry.book.edition_key,
   })
 
   return (
@@ -96,7 +98,7 @@ const MyLibrary = () => {
         </Tabs>
 
         {isLoading ? (
-          <p className="text-center italic text-muted-foreground">
+          <p className="text-center italic text-secondary-500">
             Loading your library...
           </p>
         ) : filteredBooks.length === 0 ? (

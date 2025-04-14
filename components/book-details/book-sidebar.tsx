@@ -43,30 +43,35 @@ const BookSidebar = ({ book }: { book: Book }) => {
         authors={book.authors}
         coverUrl={book.coverUrl}
         workId={book.workId}
+        editionKey={book.editionKey}
       />
       <WishListButton
         title={book.title}
         authors={book.authors}
         coverUrl={book.coverUrl}
         workId={book.workId}
+        editionKey={book.editionKey}
       />
       <HasBookButton
         title={book.title}
         authors={book.authors}
         coverUrl={book.coverUrl}
         workId={book.workId}
+        editionKey={book.editionKey}
       />
       <HasReadButton
         title={book.title}
         authors={book.authors}
         coverUrl={book.coverUrl}
         workId={book.workId}
+        editionKey={book.editionKey}
       />
       <ToBeReadButton
         title={book.title}
         authors={book.authors}
         coverUrl={book.coverUrl}
         workId={book.workId}
+        editionKey={book.editionKey}
       />
       <Toaster
         position="bottom-center"

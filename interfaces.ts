@@ -64,4 +64,5 @@ export interface BookButtonProps {
   authors: string[]
   coverUrl: string | undefined
   workId: string
+  editionKey?: string | null | undefined
 }

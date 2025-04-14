@@ -12,6 +12,7 @@ const FavouriteButton = ({
   authors,
   coverUrl,
   workId,
+  editionKey,
 }: BookButtonProps) => {
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
@@ -25,6 +26,7 @@ const FavouriteButton = ({
     title,
     authors,
     coverUrl,
+    editionKey,
     userId,
     column: 'is_favourite',
   })

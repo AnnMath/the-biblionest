@@ -12,6 +12,7 @@ const HasBookButton = ({
   authors,
   coverUrl,
   workId,
+  editionKey,
 }: BookButtonProps) => {
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
@@ -25,6 +26,7 @@ const HasBookButton = ({
     title,
     authors,
     coverUrl,
+    editionKey,
     userId,
     column: 'has_book',
   })

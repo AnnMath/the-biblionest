@@ -12,6 +12,7 @@ const ToBeReadButton = ({
   authors,
   coverUrl,
   workId,
+  editionKey,
 }: BookButtonProps) => {
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
@@ -25,6 +26,7 @@ const ToBeReadButton = ({
     title,
     authors,
     coverUrl,
+    editionKey,
     userId,
     column: 'to_be_read',
   })

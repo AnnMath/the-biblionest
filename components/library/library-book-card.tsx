@@ -17,6 +17,8 @@ const LibraryBookCard = ({ book, status = {} }: LibraryBookCardProps) => {
   const { is_favourite, is_in_wishlist, has_book, has_read, to_be_read } =
     status
 
+  console.log('Card:', book.title, book.editionKey)
+
   return (
     <Link
       href={
@@ -31,7 +33,7 @@ const LibraryBookCard = ({ book, status = {} }: LibraryBookCardProps) => {
           {book.title}
         </h2>
         {book.authors?.length > 0 && (
-          <p className="text-sm text-text-400 italic">by {book.authors[0]}</p>
+          <p className="text-sm text-text-400 italic">By {book.authors[0]}</p>
         )}
 
         <div className="flex gap-2 mt-2 text-muted-foreground">
