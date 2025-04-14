@@ -31,7 +31,7 @@ export const handleBookStatusToggle = async ({
     toast(
       <CustomToast
         message="Please log in to use this feature!"
-        color="bg-info-500/70"
+        color="bg-info-500/80"
       />,
       { unstyled: true }
     )

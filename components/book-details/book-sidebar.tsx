@@ -2,7 +2,6 @@ import { Book } from '@/interfaces'
 import Image from 'next/image'
 import PlaceholderImage from '../placeholder-image/placeholder-image'
 import ShowStarRating from '../rating/show-star-rating'
-import { Toaster } from '@/components/ui/sonner'
 import FavouriteButton from '../library-interactions/favourite-button'
 import WishListButton from '../library-interactions/wishlist-button'
 import HasBookButton from '../library-interactions/has-book-button'
@@ -72,11 +71,6 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
-      />
-      <Toaster
-        position="bottom-center"
-        containerAriaLabel="please log in"
-        theme="light"
       />
     </aside>
   )
