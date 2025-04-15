@@ -17,8 +17,6 @@ const BookDetailsPage = async ({
   // TODO: maybe some better error handling here
   if (!book) notFound()
 
-  console.log(book)
-
   return (
     <div className="bg-background-300 min-h-screen w-full py-8">
       <BookDetailCard book={book} />

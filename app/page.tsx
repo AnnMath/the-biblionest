@@ -1,7 +1,7 @@
 import HomeScreen from '@/components/home/home-screen'
 import QuoteCard from '@/components/home/quote-card'
 import TrendingCarousel from '@/components/home/trending-carousel-wrapper'
-import { fetchQuote, fetchTrending } from '@/lib/api'
+import { fetchQuote } from '@/lib/api'
 
 const Home = async () => {
   const initialQuote = await fetchQuote()

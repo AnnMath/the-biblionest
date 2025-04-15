@@ -4,7 +4,6 @@ import { fetchQuote } from '@/lib/api'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Quote } from '@/interfaces'
-import { LoaderCircle } from 'lucide-react'
 import LoadingDecoration from '../loading/loading-decoration'
 
 const QuoteCard = ({ initialQuote }: { initialQuote: Quote | null }) => {
