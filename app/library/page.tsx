@@ -9,7 +9,7 @@ const MyLibraryPage = () => {
   if (isSessionLoading) return <p>Loading your library...</p>
 
   if (!isLoggedIn) {
-    return <LoggedOut page="library" />
+    return <LoggedOut message="your library" />
   }
 
   return (
