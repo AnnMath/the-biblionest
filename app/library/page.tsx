@@ -1,6 +1,7 @@
 'use client'
 
 import MyLibrary from '@/components/library/my-library'
+import LoggedOut from '@/components/logged-out/logged-out'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 
 const MyLibraryPage = () => {
@@ -8,13 +9,7 @@ const MyLibraryPage = () => {
   if (isSessionLoading) return <p>Loading your library...</p>
 
   if (!isLoggedIn) {
-    return (
-      <div className="text-center p-8">
-        <p className="text-sm mb-4">
-          Please log in or sign up to see your books.
-        </p>
-      </div>
-    )
+    return <LoggedOut page="library" />
   }
 
   return (
