@@ -5,7 +5,6 @@ import { Button } from '../ui/button'
 import { BookLite } from '@/interfaces'
 import { useRef } from 'react'
 import Image from 'next/image'
-import PlaceholderImage from '../placeholder-image/placeholder-image'
 import Link from 'next/link'
 
 const TheSpiteCarousel = ({
