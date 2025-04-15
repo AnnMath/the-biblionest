@@ -6,6 +6,7 @@ interface UseBookStatusProps {
   workId: string
   title: string
   authors: string[]
+  authorKeys?: string[]
   coverUrl: string | undefined
   editionKey?: string | null | undefined
   userId?: string
@@ -16,6 +17,7 @@ export const useBookStatus = ({
   workId,
   title,
   authors,
+  authorKeys,
   coverUrl,
   editionKey,
   userId,
@@ -43,6 +45,7 @@ export const useBookStatus = ({
             cover_url: coverUrl,
             work_id: workId,
             edition_key: editionKey,
+            author_keys: authorKeys?.join(', '),
           },
           { onConflict: 'work_id' }
         )
@@ -77,7 +80,7 @@ export const useBookStatus = ({
     }
 
     checkStatus()
-  }, [userId, workId, title, authors, coverUrl, column])
+  }, [userId, workId, title, authors, coverUrl, column, editionKey, authorKeys])
 
   return { bookId, statusValue, setStatusValue, isBookStatusLoading }
 }

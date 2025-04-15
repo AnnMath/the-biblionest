@@ -1,5 +1,3 @@
-import { BookStatusColumn } from './types'
-
 export interface Profile {
   display_name: string
   // TODO: add other profile fields if needed
@@ -34,6 +32,7 @@ export interface BaseBook {
 export interface BookLite extends BaseBook {}
 
 export interface Book extends BaseBook {
+  authorKeys: string[] | undefined
   publishYear?: number | undefined
   synopsis?: string
   isbn?: string | undefined
@@ -65,4 +64,5 @@ export interface BookButtonProps {
   coverUrl: string | undefined
   workId: string
   editionKey?: string | null | undefined
+  authorKeys?: string[] | undefined
 }

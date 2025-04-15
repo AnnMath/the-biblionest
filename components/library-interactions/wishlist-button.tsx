@@ -13,6 +13,7 @@ const WishListButton = ({
   coverUrl,
   workId,
   editionKey,
+  authorKeys,
 }: BookButtonProps) => {
   const { userId, isLoggedIn, isSessionLoading } = useSessionStatus()
 
@@ -28,6 +29,7 @@ const WishListButton = ({
     coverUrl,
     editionKey,
     userId,
+    authorKeys,
     column: 'is_in_wishlist',
   })
 
