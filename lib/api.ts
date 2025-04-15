@@ -39,6 +39,7 @@ const getLiteBooks = (searchData: any) => {
         book.lending_edition_s ||
         (book.ia && book.ia[0]) ||
         null,
+      authorKeys: book.author_key,
     }
   })
 
@@ -112,6 +113,10 @@ export const fetchBookById = async (
       ? await fetchAuthorNames(workData.authors)
       : editionData.authors?.map((a: any) => a.name) || ['Unknown Author']
 
+    const authorKeys = workData?.authors.map((author: any) =>
+      author.author.key.replace('/authors/', '')
+    )
+
     const ratingData = workId
       ? await fetchFromAPI(`${BASE_URL}/works/${workId}/ratings.json`)
       : null
@@ -126,6 +131,7 @@ export const fetchBookById = async (
     return {
       title: workData.title,
       authors,
+      authorKeys,
       workId,
       coverUrl: editionData.covers?.[0]
         ? `https://covers.openlibrary.org/b/id/${editionData.covers[0]}-L.jpg`

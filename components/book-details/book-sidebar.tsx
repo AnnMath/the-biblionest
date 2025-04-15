@@ -43,6 +43,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
+        authorKeys={book.authorKeys}
       />
       <WishListButton
         title={book.title}
@@ -50,6 +51,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
+        authorKeys={book.authorKeys}
       />
       <HasBookButton
         title={book.title}
@@ -57,6 +59,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
+        authorKeys={book.authorKeys}
       />
       <HasReadButton
         title={book.title}
@@ -64,6 +67,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
+        authorKeys={book.authorKeys}
       />
       <ToBeReadButton
         title={book.title}
@@ -71,6 +75,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
         coverUrl={book.coverUrl}
         workId={book.workId}
         editionKey={book.editionKey}
+        authorKeys={book.authorKeys}
       />
     </aside>
   )
