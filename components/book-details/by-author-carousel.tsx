@@ -7,7 +7,7 @@ const ByAuthorCarousel = async ({ book }: { book: Book }) => {
   const related = allRelated.filter((relBook) => relBook.title !== book.title)
   if (related.length < 5) return null
   return (
-    <div className="max-w-[1024px] mx-auto bg-background-50 mt-8">
+    <div className="max-w-[1024px] mx-auto mt-8">
       <TheSpiteCarousel
         books={related}
         header={`More from ${book.authors[0]}`}
