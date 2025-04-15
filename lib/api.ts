@@ -12,9 +12,9 @@ const fetchFromAPI = async (url: string) => {
   return res.json()
 }
 
-const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
+const fetchAuthorNames = async (authorObjects: any[]): Promise<string[]> => {
   const names = await Promise.all(
-    authors.map(async (author) => {
+    authorObjects.map(async (author) => {
       const authorData = await fetchFromAPI(
         `${BASE_URL}${author.author.key}.json`
       )
@@ -167,6 +167,31 @@ export const fetchTrending = async (): Promise<BookLite[]> => {
   const books = getLiteBooks(searchData.works)
 
   return books
+}
+
+/** AUTHORS */
+
+export const fetchPopularWorksByAuthor = async (
+  authorName: string,
+  limit: number = 10
+): Promise<BookLite[]> => {
+  let searchUrl = `${BASE_URL}/search.json?author=${encodeURIComponent(
+    authorName
+  )}&language=eng&limit=${limit}&sort=editions`
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData.docs) return []
+
+  return searchData.docs.map((doc: BookFromAPI) => ({
+    title: doc.title,
+    authors: doc.author_name || [],
+    authorKeys: doc.author_key || [],
+    coverUrl: doc.cover_i
+      ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+      : undefined,
+    workId: doc.key?.replace('/works/', ''),
+    editionKey: doc.cover_edition_key,
+  }))
 }
 
 /*RANDOM QUOTES*/
