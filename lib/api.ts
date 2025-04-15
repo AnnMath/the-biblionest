@@ -39,6 +39,7 @@ const getLiteBooks = (searchData: any) => {
         book.lending_edition_s ||
         (book.ia && book.ia[0]) ||
         null,
+      authorKeys: book.author_key,
     }
   })
 

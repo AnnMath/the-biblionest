@@ -27,12 +27,12 @@ export interface BaseBook {
   workId: string
   coverUrl?: string
   editionKey?: string | null | undefined
+  authorKeys?: string[] | undefined
 }
 
 export interface BookLite extends BaseBook {}
 
 export interface Book extends BaseBook {
-  authorKeys: string[] | undefined
   publishYear?: number | undefined
   synopsis?: string
   isbn?: string | undefined
