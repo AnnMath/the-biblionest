@@ -41,7 +41,10 @@ const SearchBar = ({
       onSubmit={handleSubmit}
       className="max-w-xl mx-auto flex flex-col items-center gap-2 p-6 md:flex-row md:p-0"
     >
-      <Select onValueChange={(value) => setType(value as SearchType)}>
+      <Select
+        onValueChange={(value) => setType(value as SearchType)}
+        value={type}
+      >
         <SelectTrigger
           className="w-full md:w-[180px] self-start md:self-auto"
           aria-label="search by"
@@ -70,7 +73,7 @@ const SearchBar = ({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <Select onValueChange={(value) => setLimit(value)}>
+      <Select onValueChange={(value) => setLimit(value)} value={limit}>
         <SelectTrigger
           className="w-full md:w-[180px] self-start md:self-auto"
           aria-label="display number of books"
@@ -79,6 +82,7 @@ const SearchBar = ({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
+            <SelectLabel>Display</SelectLabel>
             <SelectItem value="20">20</SelectItem>
             <SelectItem value="50">50</SelectItem>
             <SelectItem value="100">100</SelectItem>
