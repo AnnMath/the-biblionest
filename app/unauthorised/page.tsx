@@ -1,5 +1,7 @@
-const NotAllowed = () => {
-  return <h1 className="text-3xl p-4 h-screen">This is a protected route!</h1>
+import LoggedOut from '@/components/logged-out/logged-out'
+
+const UnauthorisedPage = () => {
+  return <LoggedOut message="the best of The Nest!" />
 }
 
-export default NotAllowed
+export default UnauthorisedPage
