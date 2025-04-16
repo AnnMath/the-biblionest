@@ -11,6 +11,7 @@ import BookListSkeleton from './book-list-skeleton'
 import BookList from './book-list'
 import { useInfiniteScroll } from '@/lib/hooks/useInfiniteScroll'
 import { Button } from '../ui/button'
+import { ChevronUp } from 'lucide-react'
 
 const Search = () => {
   const router = useRouter()
@@ -40,32 +41,30 @@ const Search = () => {
 
   const pageSize = 18
 
+  const fetchAllPagesUpTo = async (targetPage: number) => {
+    setBooks([])
+    setSearchCompleted(false)
+    setIsFetchingMore(false)
+    setHasMore(true)
+    setPage(1)
+    setPagePositions({})
+    initialLoadComplete.current = false
+
+    for (let p = 1; p <= targetPage; p++) {
+      await handleFetch(queryParam, typeParam, pageSize.toString(), p)
+      setPage(p)
+      setPagePositions((prev) => ({
+        ...prev,
+        [p]: (p - 1) * pageSize,
+      }))
+    }
+
+    initialLoadComplete.current = true
+  }
+
   useEffect(() => {
     if (queryParam.trim()) {
-      setBooks([])
-      setSearchCompleted(false)
-      setIsFetchingMore(false)
-      setHasMore(true)
-      setPage(1)
-      setPagePositions({})
-      initialLoadComplete.current = false
-
-      // fetches all previous pages sequentially, so if user is on page 4, we fetch pages 1, 2, and 3 also
-      const fetchAllPagesUpTo = async () => {
-        for (let p = 1; p <= pageParam; p++) {
-          await handleFetch(queryParam, typeParam, pageSize.toString(), p)
-          setPage(p)
-
-          // Track the starting index for each page, so pg 1 will have index 0 and start at 0, pg 2 has index 1 and starts at 30 etc.
-          setPagePositions((prev) => ({
-            ...prev,
-            [p]: (p - 1) * pageSize,
-          }))
-        }
-        initialLoadComplete.current = true
-      }
-
-      fetchAllPagesUpTo()
+      fetchAllPagesUpTo(pageParam)
     } else {
       setBooks([])
       setSearchCompleted(false)
@@ -155,19 +154,13 @@ const Search = () => {
   const handleBackToTop = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    setBooks([])
-
-    setPage(1)
-    setHasMore(true)
-    setPagePositions({})
-
     const params = new URLSearchParams(searchParams.toString())
     params.set('page', '1')
     router.replace(`/search?${params.toString()}`, { scroll: false })
 
     setTimeout(() => {
-      handleFetch(queryParam, typeParam, pageSize.toString(), 1)
-    }, 300)
+      fetchAllPagesUpTo(1)
+    }, 500)
   }
 
   const showNoResults =
@@ -202,10 +195,12 @@ const Search = () => {
           </div>
           {page > 1 && (
             <Button
-              className="fixed bottom-10 right-10"
+              className="fixed bottom-10 right-10 rounded-full cursor-pointer shadow-md hover:shadow-lg hover:animate-bounce"
               onClick={handleBackToTop}
+              size="icon"
+              aria-label="back to top"
             >
-              Back to top
+              <ChevronUp />
             </Button>
           )}
         </>
