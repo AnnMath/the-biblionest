@@ -12,6 +12,7 @@ const BookListCard = ({ book }: { book: BookLite }) => {
           ? `/book/${book.workId}?edition=${book.editionKey}`
           : `/book/${book.workId}`
       }
+      className="book-item"
     >
       <Card className="flex flex-col items-center bg-background-100 justify-between text-text-500 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl h-full">
         <Image src="/decoration-2-top.svg" alt="" width={142} height={20} />
