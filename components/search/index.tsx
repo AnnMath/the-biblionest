@@ -10,6 +10,7 @@ import { fetchBooksLite } from '@/lib/api'
 import BookListSkeleton from './book-list-skeleton'
 import BookList from './book-list'
 import { useInfiniteScroll } from '@/lib/hooks/useInfiniteScroll'
+import { Button } from '../ui/button'
 
 const Search = () => {
   const router = useRouter()
@@ -151,6 +152,24 @@ const Search = () => {
     router.push(`/search?q=${encodeURIComponent(query)}&type=${type}&page=1`)
   }
 
+  const handleBackToTop = async () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    setBooks([])
+
+    setPage(1)
+    setHasMore(true)
+    setPagePositions({})
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('page', '1')
+    router.replace(`/search?${params.toString()}`, { scroll: false })
+
+    setTimeout(() => {
+      handleFetch(queryParam, typeParam, pageSize.toString(), 1)
+    }, 300)
+  }
+
   const showNoResults =
     !loading && !error && books.length === 0 && queryParam && searchCompleted
 
@@ -175,11 +194,21 @@ const Search = () => {
       )}
 
       {!loading && books.length > 0 && (
-        <div ref={bookListRef}>
-          <BookList books={books} />
-          {isFetchingMore && <BookListSkeleton />}
-          <div ref={loadMoreRef} className="h-10" />
-        </div>
+        <>
+          <div ref={bookListRef}>
+            <BookList books={books} />
+            {isFetchingMore && <BookListSkeleton />}
+            <div ref={loadMoreRef} className="h-10" />
+          </div>
+          {page > 1 && (
+            <Button
+              className="fixed bottom-10 right-10"
+              onClick={handleBackToTop}
+            >
+              Back to top
+            </Button>
+          )}
+        </>
       )}
     </div>
   )
