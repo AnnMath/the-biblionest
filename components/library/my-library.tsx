@@ -64,10 +64,18 @@ const MyLibrary = () => {
     editionKey: entry.book.edition_key,
   })
 
+  const getLastName = (name: string) => {
+    const parts = name.trim().split(' ')
+    return parts[parts.length - 1].toLowerCase()
+  }
+
   const sortBooks = (entries: UserBookEntry[]): UserBookEntry[] => {
     return [...entries].sort((a, b) => {
       const aBook = toBookLite(a)
       const bBook = toBookLite(b)
+
+      const aAuthor = aBook.authors[0] || ''
+      const bAuthor = bBook.authors[0] || ''
 
       switch (sortOption) {
         case 'title-asc':
@@ -75,9 +83,9 @@ const MyLibrary = () => {
         case 'title-desc':
           return bBook.title.localeCompare(aBook.title)
         case 'author-asc':
-          return (aBook.authors[0] || '').localeCompare(bBook.authors[0] || '')
+          return getLastName(aAuthor).localeCompare(getLastName(bAuthor))
         case 'author-desc':
-          return (bBook.authors[0] || '').localeCompare(aBook.authors[0] || '')
+          return getLastName(bAuthor).localeCompare(getLastName(aAuthor))
         case 'created-at-asc':
           return (
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
