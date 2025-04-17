@@ -1,12 +1,13 @@
 'use client'
 
 import MyLibrary from '@/components/library/my-library'
+import FullScreenLoader from '@/components/loading/full-screen-loader'
 import LoggedOut from '@/components/logged-out/logged-out'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 
 const MyLibraryPage = () => {
   const { isLoggedIn, isSessionLoading } = useSessionStatus()
-  if (isSessionLoading) return <p>Loading your library...</p>
+  if (isSessionLoading) return <FullScreenLoader />
 
   if (!isLoggedIn) {
     return <LoggedOut message="your library" />

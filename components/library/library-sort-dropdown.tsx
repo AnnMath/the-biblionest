@@ -23,7 +23,7 @@ const LibrarySortDropdown = ({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Sort</SelectLabel>
+            <SelectLabel>Sort by:</SelectLabel>
             <SelectItem value="title-asc">Title A-Z</SelectItem>
             <SelectItem value="title-desc">Title Z-A</SelectItem>
             <SelectItem value="author-asc">Author A-Z</SelectItem>

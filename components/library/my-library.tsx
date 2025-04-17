@@ -1,9 +1,7 @@
 'use client'
 
-import { BookCheck, Bookmark, BookOpen, Heart, LibraryBig } from 'lucide-react'
 import BookOrnamentBottom from '../ornaments/book-ornament-bottom'
 import BookOrnamentTop from '../ornaments/book-ornament-top'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createClient } from '@/utils/supabase/client'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useEffect, useState } from 'react'
@@ -11,6 +9,7 @@ import { BookStatusColumn, UserBookEntry } from '@/types'
 import { BookLite } from '@/interfaces'
 import LibraryBookCard from './library-book-card'
 import LibrarySortDropdown from './library-sort-dropdown'
+import LibraryTabs from './library-tabs'
 
 const MyLibrary = () => {
   const supabase = createClient()
@@ -104,29 +103,10 @@ const MyLibrary = () => {
           Welcome to your library!
         </h1>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={(value) => setActiveTab(value as BookStatusColumn)}
-        >
-          <TabsList className="grid grid-cols-2 text-left mx-auto min-[650px]:inline-flex h-auto">
-            <TabsTrigger value="is_favourite">
-              <Heart fill="oklch(0.65 0.16 18)" /> Favourites
-            </TabsTrigger>
-            <TabsTrigger value="is_in_wishlist">
-              <Bookmark fill="oklch(0.77 0.13 85)" /> Wishlist
-            </TabsTrigger>
-            <TabsTrigger value="has_book">
-              <LibraryBig fill="oklch(0.63 0.045 50)" />
-              Owned
-            </TabsTrigger>
-            <TabsTrigger value="has_read">
-              <BookCheck fill="oklch(0.66 0.04 140)" /> Books I've read
-            </TabsTrigger>
-            <TabsTrigger value="to_be_read">
-              <BookOpen fill="oklch(0.73 0.05 80)" /> To-be-read pile
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <LibraryTabs
+          activeTab={activeTab}
+          onTabChange={(val) => setActiveTab(val as BookStatusColumn)}
+        />
 
         <LibrarySortDropdown
           sortOption={sortOption}
