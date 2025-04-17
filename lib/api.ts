@@ -51,7 +51,7 @@ const getLiteBooks = (searchData: any) => {
 export const fetchBooksLite = async (
   query: string,
   type: SearchType = 'all',
-  limit: string,
+  limit: number = 18,
   offset: number
 ): Promise<BookLite[]> => {
   if (!query) return []
