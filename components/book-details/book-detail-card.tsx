@@ -7,6 +7,7 @@ import BookOrnamentTop from '../ornaments/book-ornament-top'
 import ByAuthorCarousel from './by-author-carousel'
 import { Suspense } from 'react'
 import LoadingDecoration from '../loading/loading-decoration'
+import TrackBookViews from './track-book-views'
 
 const BookDetailCard = ({ book }: { book: Book }) => {
   return (
@@ -27,6 +28,7 @@ const BookDetailCard = ({ book }: { book: Book }) => {
           </section>
           <BookOrnamentBottom />
         </div>
+        <TrackBookViews workId={book.workId} />
       </Suspense>
       <ByAuthorCarousel book={book} />
     </>
