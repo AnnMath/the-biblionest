@@ -62,7 +62,7 @@ export const handleBookStatusToggle = async ({
   toast(
     <CustomToast
       message={currentValue ? toastMessages.off : toastMessages.on}
-      color="bg-info-500/70"
+      color="bg-info-500"
     />,
     { unstyled: true }
   )

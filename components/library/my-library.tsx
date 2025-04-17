@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { BookStatusColumn, UserBookEntry } from '@/types'
 import { BookLite } from '@/interfaces'
 import LibraryBookCard from './library-book-card'
+import LibrarySortDropdown from './library-sort-dropdown'
 
 const MyLibrary = () => {
   const supabase = createClient()
@@ -18,6 +19,7 @@ const MyLibrary = () => {
   const [activeTab, setActiveTab] = useState<BookStatusColumn>('is_favourite')
   const [books, setBooks] = useState<UserBookEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [sortOption, setSortOption] = useState<string>('title-asc')
 
   useEffect(() => {
     if (!userId) return
@@ -53,8 +55,6 @@ const MyLibrary = () => {
     fetchBooks()
   }, [userId])
 
-  const filteredBooks = books.filter((entry) => entry[activeTab])
-
   const toBookLite = (entry: any): BookLite => ({
     title: entry.book.title,
     authors:
@@ -65,6 +65,37 @@ const MyLibrary = () => {
     editionKey: entry.book.edition_key,
   })
 
+  const sortBooks = (entries: UserBookEntry[]): UserBookEntry[] => {
+    return [...entries].sort((a, b) => {
+      const aBook = toBookLite(a)
+      const bBook = toBookLite(b)
+
+      switch (sortOption) {
+        case 'title-asc':
+          return aBook.title.localeCompare(bBook.title)
+        case 'title-desc':
+          return bBook.title.localeCompare(aBook.title)
+        case 'author-asc':
+          return (aBook.authors[0] || '').localeCompare(bBook.authors[0] || '')
+        case 'author-desc':
+          return (bBook.authors[0] || '').localeCompare(aBook.authors[0] || '')
+        case 'created-at-asc':
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          )
+        case 'created-at-desc':
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          )
+        default:
+          return 0
+      }
+    })
+  }
+
+  const filteredBooks = books.filter((entry) => entry[activeTab])
+  const sortedBooks = sortBooks(filteredBooks)
+
   return (
     <article className="max-w-[1280px] bg-background-50 p-4 rounded-xl shadow-md min-w-[320px] w-screen">
       <BookOrnamentTop />
@@ -72,6 +103,7 @@ const MyLibrary = () => {
         <h1 className="font-heading font-bold italic text-4xl text-primary-500 text-center">
           Welcome to your library!
         </h1>
+
         <Tabs
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as BookStatusColumn)}
@@ -96,6 +128,11 @@ const MyLibrary = () => {
           </TabsList>
         </Tabs>
 
+        <LibrarySortDropdown
+          sortOption={sortOption}
+          onSortChange={(val) => setSortOption(val)}
+        />
+
         {isLoading ? (
           <p className="text-center italic text-secondary-500">
             Loading your library...
@@ -106,7 +143,7 @@ const MyLibrary = () => {
           </p>
         ) : (
           <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredBooks.map((entry) => (
+            {sortedBooks.map((entry) => (
               <LibraryBookCard
                 key={entry.book_id}
                 book={toBookLite(entry)}
