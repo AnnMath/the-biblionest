@@ -13,6 +13,8 @@ export type UserBookEntry = {
   book: BookLite
   user_id: string
   book_id: string
+  created_at: string
+  updated_at: string
 } & {
   [K in BookStatusColumn]: boolean
 }
