@@ -4,7 +4,7 @@ import { Book } from '@/interfaces'
 import { SearchType } from '@/types'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SearchBar from './search-bar'
 import { fetchBooksLite } from '@/lib/api'
 import BookListSkeleton from './book-list-skeleton'
@@ -19,7 +19,7 @@ const Search = () => {
 
   const queryParam = searchParams.get('q') || ''
   const typeParam = (searchParams.get('type') as SearchType) || 'all'
-  const pageParam = parseInt(searchParams.get('page') || '1')
+  const offsetParam = parseInt(searchParams.get('offset') || '0')
 
   const [searchQuery, setSearchQuery] = useState(queryParam)
   const [searchType, setSearchType] = useState<SearchType>(typeParam)
@@ -28,138 +28,156 @@ const Search = () => {
   const [error, setError] = useState<string | null>(null)
   const [searchCompleted, setSearchCompleted] = useState(false)
 
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
+  const [offset, setOffset] = useState(0)
   const [isFetchingMore, setIsFetchingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
 
-  // Track page positions and ref for scrolling
-  const [pagePositions, setPagePositions] = useState<{
-    [page: number]: number
-  }>({})
   const bookListRef = useRef<HTMLDivElement>(null)
-  const initialLoadComplete = useRef(false)
+  const fetchedOffsets = useRef<Set<number>>(new Set())
+  const fetchedWorkIds = useRef<Set<string>>(new Set())
 
-  const pageSize = 18
+  const limit = 18
 
-  const fetchAllPagesUpTo = async (targetPage: number) => {
+  const fetchAllUpToOffset = async (targetOffset: number) => {
+    fetchedOffsets.current.clear()
+    fetchedWorkIds.current.clear() // reset tracked workIds
+
     setBooks([])
-    setSearchCompleted(false)
-    setIsFetchingMore(false)
+    setOffset(targetOffset)
     setHasMore(true)
-    setPage(1)
-    setPagePositions({})
-    initialLoadComplete.current = false
+    setSearchCompleted(false)
+    setLoading(true)
 
-    for (let p = 1; p <= targetPage; p++) {
-      await handleFetch(queryParam, typeParam, pageSize.toString(), p)
-      setPage(p)
-      setPagePositions((prev) => ({
-        ...prev,
-        [p]: (p - 1) * pageSize,
-      }))
-    }
-
-    initialLoadComplete.current = true
-  }
-
-  useEffect(() => {
-    if (queryParam.trim()) {
-      fetchAllPagesUpTo(pageParam)
-    } else {
-      setBooks([])
-      setSearchCompleted(false)
-    }
-  }, [queryParam, typeParam])
-
-  // Scroll to the correct position once initial loading completes
-  useEffect(() => {
-    if (initialLoadComplete.current && pageParam > 1 && bookListRef.current) {
-      const scrollToPosition = pagePositions[pageParam] || 0
-
-      // Find the element at the specified position
-      if (scrollToPosition < books.length) {
-        const bookElements = bookListRef.current.querySelectorAll('.book-item')
-        if (bookElements && bookElements[scrollToPosition]) {
-          bookElements[scrollToPosition].scrollIntoView({
-            behavior: 'auto',
-            block: 'start',
-          })
-        }
-      }
-    }
-  }, [books, pagePositions, pageParam, initialLoadComplete.current])
-
-  const handleFetch = async (
-    query: string,
-    type: SearchType,
-    limit: string,
-    page: number
-  ) => {
-    if (page === 1) {
-      setLoading(true)
-      setBooks([])
-    } else {
-      setIsFetchingMore(true)
-    }
-
-    setError(null)
-    if (page === 1) setSearchCompleted(false)
+    const pagesToFetch = Math.ceil((targetOffset + 1) / limit)
 
     try {
-      const results = await fetchBooksLite(query, type, limit, page)
+      for (let i = 0; i < pagesToFetch; i++) {
+        const currentOffset = i * limit
+        if (!fetchedOffsets.current.has(currentOffset)) {
+          const results = await fetchBooksLite(
+            queryParam,
+            typeParam,
+            limit,
+            currentOffset
+          )
 
-      if (page === 1) {
-        setBooks(results)
-      } else {
-        setBooks((prev) => [...prev, ...results])
+          // dedupe based on workId
+          const uniqueResults = results.filter((book) => {
+            if (!fetchedWorkIds.current.has(book.workId)) {
+              fetchedWorkIds.current.add(book.workId)
+              return true
+            }
+            return false
+          })
+          setBooks((prev) => [...prev, ...uniqueResults])
+
+          if (results.length < limit) {
+            setHasMore(false)
+            break
+          }
+        }
       }
-
-      setHasMore(results.length === parseInt(limit))
+      fetchedOffsets.current.add(targetOffset)
     } catch (err) {
       console.error(err)
       setError('Something went wrong while fetching books.')
       setHasMore(false)
     } finally {
       setLoading(false)
-      setIsFetchingMore(false)
       setSearchCompleted(true)
+    }
+  }
+
+  useEffect(() => {
+    if (queryParam.trim()) {
+      fetchAllUpToOffset(offsetParam)
+    } else {
+      setBooks([])
+      setSearchCompleted(false)
+    }
+  }, [queryParam, typeParam])
+
+  useEffect(() => {
+    if (offsetParam > 0 && books.length > 0) {
+      const bookElements = document.querySelectorAll('.book-item')
+      if (bookElements[offsetParam]) {
+        bookElements[offsetParam].scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        })
+      }
+    }
+  }, [books, offsetParam])
+
+  const handleFetch = async (
+    query: string,
+    type: SearchType,
+    limit: number,
+    offset: number
+  ) => {
+    if (fetchedOffsets.current.has(offset)) return
+    fetchedOffsets.current.add(offset)
+
+    setError(null)
+    if (offset === 0) {
+      setLoading(true)
+      setBooks([])
+      fetchedWorkIds.current.clear() // reset here too
+      setSearchCompleted(false)
+    } else {
+      setIsFetchingMore(true)
+    }
+
+    try {
+      const results = await fetchBooksLite(query, type, limit, offset)
+
+      const uniqueResults = results.filter((book) => {
+        if (!fetchedWorkIds.current.has(book.workId)) {
+          fetchedWorkIds.current.add(book.workId)
+          return true
+        }
+        return false
+      })
+      setBooks((prev) => [...prev, ...uniqueResults])
+      setHasMore(results.length === limit)
+    } catch (err) {
+      console.error(err)
+      setError('Something went wrong while fetching books.')
+      setHasMore(false)
+    } finally {
+      setIsFetchingMore(false)
     }
   }
 
   const loadMoreRef = useInfiniteScroll(() => {
     if (!isFetchingMore && hasMore) {
-      const nextPage = page + 1
-      handleFetch(queryParam, typeParam, pageSize.toString(), nextPage)
-      setPage(nextPage)
+      const newOffset = offset + limit
+      handleFetch(queryParam, typeParam, limit, newOffset)
+      setOffset(newOffset)
 
       const params = new URLSearchParams(searchParams.toString())
-      params.set('page', nextPage.toString())
+      params.set('offset', newOffset.toString())
       router.replace(`/search?${params.toString()}`, { scroll: false })
-
-      // Track this new page's position
-      setPagePositions((prev) => ({
-        ...prev,
-        [nextPage]: books.length,
-      }))
     }
   }, hasMore)
 
   const handleSearch = (query: string, type: SearchType = 'all') => {
     setSearchQuery(query)
     setSearchType(type)
+    setOffset(0)
 
-    router.push(`/search?q=${encodeURIComponent(query)}&type=${type}&page=1`)
+    router.push(`/search?q=${encodeURIComponent(query)}&type=${type}&offset=0`)
   }
 
   const handleBackToTop = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     const params = new URLSearchParams(searchParams.toString())
-    params.set('page', '1')
+    params.set('offset', '0')
     router.replace(`/search?${params.toString()}`, { scroll: false })
 
     setTimeout(() => {
-      fetchAllPagesUpTo(1)
+      fetchAllUpToOffset(0)
     }, 500)
   }
 
@@ -193,7 +211,8 @@ const Search = () => {
             {isFetchingMore && <BookListSkeleton />}
             <div ref={loadMoreRef} className="h-10" />
           </div>
-          {page > 1 && (
+
+          {offset > 0 && (
             <Button
               className="fixed bottom-10 right-10 rounded-full cursor-pointer shadow-md hover:shadow-lg hover:animate-bounce"
               onClick={handleBackToTop}
