@@ -52,11 +52,11 @@ export const fetchBooksLite = async (
   query: string,
   type: SearchType = 'all',
   limit: string,
-  page: number = 1
+  offset: number
 ): Promise<BookLite[]> => {
   if (!query) return []
 
-  let searchUrl = `${BASE_URL}/search.json?limit=${limit}&page=${page}`
+  let searchUrl = `${BASE_URL}/search.json?limit=${limit}&offset=${offset}`
   if (type === 'title') {
     searchUrl += `&title=${encodeURIComponent(query)}`
   } else if (type === 'author') {
