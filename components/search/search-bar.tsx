@@ -15,25 +15,22 @@ import {
 import { useState } from 'react'
 
 interface SearchBarProps {
-  onSearch: (query: string, type: SearchType, limit: string) => void
+  onSearch: (query: string, type: SearchType) => void
   initialQuery?: string
   initialType?: SearchType
-  initialLimit?: string
 }
 
 const SearchBar = ({
   onSearch,
   initialQuery = '',
   initialType = 'all',
-  initialLimit = '20',
 }: SearchBarProps) => {
   const [query, setQuery] = useState(initialQuery)
   const [type, setType] = useState<SearchType>(initialType)
-  const [limit, setLimit] = useState<string>(initialLimit)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSearch(query, type, limit)
+    onSearch(query, type)
   }
 
   return (
@@ -41,7 +38,10 @@ const SearchBar = ({
       onSubmit={handleSubmit}
       className="max-w-xl mx-auto flex flex-col items-center gap-2 p-6 md:flex-row md:p-0"
     >
-      <Select onValueChange={(value) => setType(value as SearchType)}>
+      <Select
+        onValueChange={(value) => setType(value as SearchType)}
+        value={type}
+      >
         <SelectTrigger
           className="w-full md:w-[180px] self-start md:self-auto"
           aria-label="search by"
@@ -70,21 +70,7 @@ const SearchBar = ({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <Select onValueChange={(value) => setLimit(value)}>
-        <SelectTrigger
-          className="w-full md:w-[180px] self-start md:self-auto"
-          aria-label="display number of books"
-        >
-          <SelectValue placeholder="Display" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+
       <Button type="submit" className="md:self-auto w-full md:w-auto">
         Search
       </Button>

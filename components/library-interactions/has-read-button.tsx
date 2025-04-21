@@ -1,13 +1,13 @@
 'use client'
 
+import { Book, BookCheck } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Heart } from 'lucide-react'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const FavouriteButton = ({
+const HasReadButton = ({
   title,
   authors,
   coverUrl,
@@ -19,8 +19,8 @@ const FavouriteButton = ({
 
   const {
     bookId,
-    statusValue: isFavourite,
-    setStatusValue: setIsFavourite,
+    statusValue: hasRead,
+    setStatusValue: setHasRead,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -30,7 +30,7 @@ const FavouriteButton = ({
     editionKey,
     userId,
     authorKeys,
-    column: 'is_favourite',
+    column: 'has_read',
   })
 
   const handleClick = async () => {
@@ -38,16 +38,15 @@ const FavouriteButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'is_favourite',
-      currentValue: isFavourite,
-      setValue: setIsFavourite,
+      column: 'has_read',
+      currentValue: hasRead,
+      setValue: setHasRead,
       toastMessages: {
-        on: 'Added to favourites',
-        off: 'Removed from favourites',
+        on: 'Added to your read pile',
+        off: 'Removed from your read pile',
       },
     })
   }
-
   return (
     <>
       <Button
@@ -55,15 +54,15 @@ const FavouriteButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {isFavourite ? (
+        {hasRead ? (
           <>
-            <Heart fill="oklch(65% 0.16 18)" />
-            In favourites
+            <BookCheck fill="oklch(0.66 0.04 140)" />
+            I've read this
           </>
         ) : (
           <>
-            <Heart />
-            Add to favourites
+            <Book />
+            Mark as read
           </>
         )}
       </Button>
@@ -71,4 +70,4 @@ const FavouriteButton = ({
   )
 }
 
-export default FavouriteButton
+export default HasReadButton

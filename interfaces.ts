@@ -27,6 +27,7 @@ export interface BaseBook {
   workId: string
   coverUrl?: string
   editionKey?: string | null | undefined
+  authorKeys?: string[] | undefined
 }
 
 export interface BookLite extends BaseBook {}
@@ -55,4 +56,13 @@ export interface Quote {
   quote: string
   book: string
   author: string
+}
+
+export interface BookButtonProps {
+  title: string
+  authors: string[]
+  coverUrl: string | undefined
+  workId: string
+  editionKey?: string | null | undefined
+  authorKeys?: string[] | undefined
 }

@@ -3,6 +3,7 @@ import { Playfair_Display, Libre_Baskerville } from 'next/font/google'
 import './globals.css'
 import Header from '../components/header/header'
 import Footer from '@/components/footer/footer'
+import { Toaster } from '@/components/ui/sonner'
 
 const playfair = Playfair_Display({
   variable: '--font-playfair',
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <Toaster position="bottom-center" theme="light" />
       </body>
     </html>
   )

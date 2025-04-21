@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The BiblioNest 📚🪺
 
-## Getting Started
+_A cozy digital sanctuary for readers to discover, save, and reflect on the books they love._
 
-First, run the development server:
+## ✨ About
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The BiblioNest is a book-focused web application that allows readers to search for books, view detailed information, log into their account and curate their own digital library. Whether you're a casual reader or a passionate collector, The BiblioNest provides a warm, personal space to organize your reading life — without being beholden to Big Tech.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Built with ❤️ by **Ann Mathenge**, and regularly supervised by her fluffy coworker, **Cate** the British Longhair.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔍 Features
 
-## Learn More
+### 📖 Core Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Search for books** using the Open Library API
+- **View detailed book info**, including synopsis and Open Library ratings
+- **Create an account** and log in
+- **Add books** to your personal library and wishlist
+- **Track your reading journey** (owned, read, to-be-read)
+- **Curate your favourites and wishlist**
+- **Leave personal ratings and reviews**
+- **Infinite scroll** on search with scroll position restoration
+- **Back-to-top** navigation for long scrolls
+- **Sort and filter library** by author, title, or date added
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🧠 Smart Extras
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **"Trending in the Nest"** carousel powered by view counts
+- **"More from this author"** suggestions
+- **Custom bookish toasts**
+- **Modern, responsive design**
+- **No login? No problem.** Public features like search available without an account
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework:** Next.js 15 with App Router
+- **Styling:** TailwindCSS
+- **Icons & UI:** Lucide Icons + shadcn/ui
+- **Backend:** Supabase (auth, DB, and RPC)
+- **Authentication:** Supabase + email-based login
+- **API:** Open Library
+
+---
+
+## 🧪 Project Structure & Approach
+
+This project was developed using an agile approach:
+
+- **Sprint 1:** MVP core features (search, detail view, add books to library)
+- **Sprint 2:** Extended functionality (ratings, reviews, infinite scroll, polish)
+
+Tools used: Trello, GitHub, local-first dev philosophy with future plans for public deployment.
+
+---
+
+## 🐾 Acknowledgements
+
+- Thanks to [Open Library](https://openlibrary.org/developers/api) for their amazing open book data.
+
+---
+
+## 🐦 Get in Touch
+
+This project is made with love and curiosity.  
+Want to collaborate, give feedback, or just say hi? Reach out via [GitHub](https://github.com/Gremlet)!

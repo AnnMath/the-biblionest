@@ -1,13 +1,13 @@
 'use client'
 
+import { Bookmark } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Heart } from 'lucide-react'
 import { BookButtonProps } from '@/interfaces'
 import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
 import { useBookStatus } from '@/lib/hooks/useBookStatus'
 import { handleBookStatusToggle } from './handleBookStatusToggle'
 
-const FavouriteButton = ({
+const WishListButton = ({
   title,
   authors,
   coverUrl,
@@ -19,8 +19,8 @@ const FavouriteButton = ({
 
   const {
     bookId,
-    statusValue: isFavourite,
-    setStatusValue: setIsFavourite,
+    statusValue: isInWishList,
+    setStatusValue: setIsInWishList,
     isBookStatusLoading,
   } = useBookStatus({
     workId,
@@ -30,7 +30,7 @@ const FavouriteButton = ({
     editionKey,
     userId,
     authorKeys,
-    column: 'is_favourite',
+    column: 'is_in_wishlist',
   })
 
   const handleClick = async () => {
@@ -38,16 +38,15 @@ const FavouriteButton = ({
       isLoggedIn,
       userId,
       bookId,
-      column: 'is_favourite',
-      currentValue: isFavourite,
-      setValue: setIsFavourite,
+      column: 'is_in_wishlist',
+      currentValue: isInWishList,
+      setValue: setIsInWishList,
       toastMessages: {
-        on: 'Added to favourites',
-        off: 'Removed from favourites',
+        on: 'Added to wishlist',
+        off: 'Removed from wishlist',
       },
     })
   }
-
   return (
     <>
       <Button
@@ -55,15 +54,15 @@ const FavouriteButton = ({
         disabled={isSessionLoading || isBookStatusLoading}
         variant="outline"
       >
-        {isFavourite ? (
+        {isInWishList ? (
           <>
-            <Heart fill="oklch(65% 0.16 18)" />
-            In favourites
+            <Bookmark fill="oklch(77% 0.13 85)" />
+            In wishlist
           </>
         ) : (
           <>
-            <Heart />
-            Add to favourites
+            <Bookmark />
+            Add to wishlist
           </>
         )}
       </Button>
@@ -71,4 +70,4 @@ const FavouriteButton = ({
   )
 }
 
-export default FavouriteButton
+export default WishListButton

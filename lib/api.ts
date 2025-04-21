@@ -2,6 +2,7 @@ import { Book, BookFromAPI, BookLite, Quote } from '@/interfaces'
 import { SearchType } from '@/types'
 import findAppropriateEdition from '@/utils/helpers/editionHelper'
 import getLanguages from '@/utils/helpers/getLanguageHelper'
+import { createClient } from '@/utils/supabase/client'
 
 const BASE_URL = 'https://openlibrary.org'
 
@@ -12,9 +13,9 @@ const fetchFromAPI = async (url: string) => {
   return res.json()
 }
 
-const fetchAuthorNames = async (authors: any[]): Promise<string[]> => {
+const fetchAuthorNames = async (authorObjects: any[]): Promise<string[]> => {
   const names = await Promise.all(
-    authors.map(async (author) => {
+    authorObjects.map(async (author) => {
       const authorData = await fetchFromAPI(
         `${BASE_URL}${author.author.key}.json`
       )
@@ -39,6 +40,7 @@ const getLiteBooks = (searchData: any) => {
         book.lending_edition_s ||
         (book.ia && book.ia[0]) ||
         null,
+      authorKeys: book.author_key,
     }
   })
 
@@ -50,11 +52,12 @@ const getLiteBooks = (searchData: any) => {
 export const fetchBooksLite = async (
   query: string,
   type: SearchType = 'all',
-  limit: string = '20'
+  limit: number = 18,
+  offset: number
 ): Promise<BookLite[]> => {
   if (!query) return []
 
-  let searchUrl = `${BASE_URL}/search.json?limit=${limit}`
+  let searchUrl = `${BASE_URL}/search.json?limit=${limit}&offset=${offset}`
   if (type === 'title') {
     searchUrl += `&title=${encodeURIComponent(query)}`
   } else if (type === 'author') {
@@ -112,6 +115,10 @@ export const fetchBookById = async (
       ? await fetchAuthorNames(workData.authors)
       : editionData.authors?.map((a: any) => a.name) || ['Unknown Author']
 
+    const authorKeys = workData?.authors.map((author: any) =>
+      author.author.key.replace('/authors/', '')
+    )
+
     const ratingData = workId
       ? await fetchFromAPI(`${BASE_URL}/works/${workId}/ratings.json`)
       : null
@@ -126,6 +133,7 @@ export const fetchBookById = async (
     return {
       title: workData.title,
       authors,
+      authorKeys,
       workId,
       coverUrl: editionData.covers?.[0]
         ? `https://covers.openlibrary.org/b/id/${editionData.covers[0]}-L.jpg`
@@ -161,6 +169,65 @@ export const fetchTrending = async (): Promise<BookLite[]> => {
   const books = getLiteBooks(searchData.works)
 
   return books
+}
+
+export const fetchTrendingInNest = async () => {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('books')
+    .select(
+      `
+      id,
+      title,
+      author_names,
+      cover_url,
+      work_id,
+      edition_key,
+      view_count
+    `
+    )
+    .order('view_count', { ascending: false })
+    .limit(10)
+
+  if (error) {
+    console.error('Error fetching trending books:', error.message)
+    return []
+  }
+
+  // TODO: Type this properly
+  return data.map((book: any) => ({
+    title: book.title,
+    authors: book.author_names?.split(',').map((a: string) => a.trim()) || [],
+    coverUrl: book.cover_url,
+    workId: book.work_id,
+    editionKey: book.edition_key,
+  }))
+}
+
+/** AUTHORS */
+
+export const fetchPopularWorksByAuthor = async (
+  authorName: string,
+  limit: number = 10
+): Promise<BookLite[]> => {
+  let searchUrl = `${BASE_URL}/search.json?author=${encodeURIComponent(
+    authorName
+  )}&language=eng&limit=${limit}&sort=editions`
+
+  const searchData = await fetchFromAPI(searchUrl)
+  if (!searchData.docs) return []
+
+  return searchData.docs.map((doc: BookFromAPI) => ({
+    title: doc.title,
+    authors: doc.author_name || [],
+    authorKeys: doc.author_key || [],
+    coverUrl: doc.cover_i
+      ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+      : undefined,
+    workId: doc.key?.replace('/works/', ''),
+    editionKey: doc.cover_edition_key,
+  }))
 }
 
 /*RANDOM QUOTES*/
