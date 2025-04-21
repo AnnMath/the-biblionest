@@ -101,7 +101,16 @@ const MyLibrary = () => {
     })
   }
 
-  const filteredBooks = books.filter((entry) => entry[activeTab])
+  const filteredBooks = books.filter((entry) => {
+    if (activeTab === 'has_review_or_rating') {
+      return (
+        (entry.review && entry.review.trim().length > 0) ||
+        entry.rating !== null
+      )
+    } else {
+      return entry[activeTab]
+    }
+  })
   const sortedBooks = sortBooks(filteredBooks)
 
   return (
@@ -145,6 +154,9 @@ const MyLibrary = () => {
                   is_in_wishlist: entry.is_in_wishlist,
                   to_be_read: entry.to_be_read,
                 }}
+                rating={entry.rating}
+                review={entry.review}
+                activeTab={activeTab}
               />
             ))}
           </section>

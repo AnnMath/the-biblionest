@@ -1,6 +1,15 @@
 import { BookLite } from '@/interfaces'
-import { BookCheck, Bookmark, BookOpen, Heart, LibraryBig } from 'lucide-react'
+import { BookStatusColumn } from '@/types'
+import {
+  BookCheck,
+  Bookmark,
+  BookOpen,
+  Heart,
+  LibraryBig,
+  Star,
+} from 'lucide-react'
 import Link from 'next/link'
+import ShowStarRating from '../rating/show-star-rating'
 
 type LibraryBookCardProps = {
   book: BookLite
@@ -11,9 +20,18 @@ type LibraryBookCardProps = {
     has_read?: boolean
     to_be_read?: boolean
   }
+  rating: number | null
+  review: string | null
+  activeTab: BookStatusColumn
 }
 
-const LibraryBookCard = ({ book, status = {} }: LibraryBookCardProps) => {
+const LibraryBookCard = ({
+  book,
+  status = {},
+  rating,
+  review,
+  activeTab,
+}: LibraryBookCardProps) => {
   const { is_favourite, is_in_wishlist, has_book, has_read, to_be_read } =
     status
 
@@ -50,7 +68,24 @@ const LibraryBookCard = ({ book, status = {} }: LibraryBookCardProps) => {
           {to_be_read && (
             <BookOpen fill="oklch(0.73 0.05 80)" className="w-4 h-4" />
           )}
+          {rating && (
+            <Star fill="oklch(82.8% 0.189 84.429)" className="w-4 h-4" />
+          )}
         </div>
+        {activeTab === 'has_review_or_rating' && (
+          <div className="mt-2 space-y-2 text-sm">
+            {rating !== null && (
+              <div className="flex items-center gap-1">
+                <ShowStarRating rating={rating} />
+                {rating} / 5
+              </div>
+            )}
+
+            {review && (
+              <p className="italic text-text-500 line-clamp-3">“{review}”</p>
+            )}
+          </div>
+        )}
       </div>
     </Link>
   )

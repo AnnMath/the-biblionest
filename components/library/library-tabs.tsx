@@ -1,6 +1,13 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BookStatusColumn } from '@/types'
-import { BookCheck, Bookmark, BookOpen, Heart, LibraryBig } from 'lucide-react'
+import {
+  BookCheck,
+  Bookmark,
+  BookOpen,
+  Heart,
+  LibraryBig,
+  Star,
+} from 'lucide-react'
 
 const LibraryTabs = ({
   activeTab,
@@ -11,7 +18,7 @@ const LibraryTabs = ({
 }) => {
   return (
     <Tabs value={activeTab} onValueChange={onTabChange}>
-      <TabsList className="grid grid-cols-2 text-left mx-auto min-[650px]:inline-flex h-auto">
+      <TabsList className="grid grid-cols-2 mx-auto min-[650px]:inline-flex h-auto">
         <TabsTrigger value="is_favourite">
           <Heart fill="oklch(0.65 0.16 18)" /> Favourites
         </TabsTrigger>
@@ -27,6 +34,9 @@ const LibraryTabs = ({
         </TabsTrigger>
         <TabsTrigger value="to_be_read">
           <BookOpen fill="oklch(0.73 0.05 80)" /> To-be-read pile
+        </TabsTrigger>
+        <TabsTrigger value="has_review_or_rating">
+          <Star className="fill-amber-400" /> My reviews
         </TabsTrigger>
       </TabsList>
     </Tabs>
