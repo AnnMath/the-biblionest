@@ -18,7 +18,7 @@ const LibrarySortDropdown = ({
   return (
     <div className="self-center sm:self-start">
       <Select value={sortOption} onValueChange={onSortChange}>
-        <SelectTrigger className="w-48 ">
+        <SelectTrigger className="w-48" aria-label="Sort by">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
         <SelectContent>
