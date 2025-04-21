@@ -8,6 +8,7 @@ export type BookStatusColumn =
   | 'has_read'
   | 'has_book'
   | 'to_be_read'
+  | 'has_review_or_rating'
 
 export type UserBookEntry = {
   book: BookLite
@@ -15,6 +16,8 @@ export type UserBookEntry = {
   book_id: string
   created_at: string
   updated_at: string
+  rating: number | null
+  review: string | null
 } & {
   [K in BookStatusColumn]: boolean
 }

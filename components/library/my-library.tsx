@@ -10,10 +10,11 @@ import { BookLite } from '@/interfaces'
 import LibraryBookCard from './library-book-card'
 import LibrarySortDropdown from './library-sort-dropdown'
 import LibraryTabs from './library-tabs'
+import { LoaderCircle } from 'lucide-react'
 
 const MyLibrary = () => {
   const supabase = createClient()
-  const { userId } = useSessionStatus()
+  const { userId, displayName } = useSessionStatus()
 
   const [activeTab, setActiveTab] = useState<BookStatusColumn>('is_favourite')
   const [books, setBooks] = useState<UserBookEntry[]>([])
@@ -100,16 +101,27 @@ const MyLibrary = () => {
     })
   }
 
-  const filteredBooks = books.filter((entry) => entry[activeTab])
+  const filteredBooks = books.filter((entry) => {
+    if (activeTab === 'has_review_or_rating') {
+      return (
+        (entry.review && entry.review.trim().length > 0) ||
+        entry.rating !== null
+      )
+    } else {
+      return entry[activeTab]
+    }
+  })
   const sortedBooks = sortBooks(filteredBooks)
 
   return (
     <article className="max-w-[1280px] bg-background-50 p-4 rounded-xl shadow-md min-w-[320px] w-screen">
       <BookOrnamentTop />
       <section className="flex flex-col gap-8 py-8 md:p-8">
-        <h1 className="font-heading font-bold italic text-4xl text-primary-500 text-center">
-          Welcome to your library!
-        </h1>
+        {displayName && (
+          <h1 className="font-heading font-bold italic text-4xl text-primary-500 text-center">
+            {displayName}'s library
+          </h1>
+        )}
 
         <LibraryTabs
           activeTab={activeTab}
@@ -142,6 +154,9 @@ const MyLibrary = () => {
                   is_in_wishlist: entry.is_in_wishlist,
                   to_be_read: entry.to_be_read,
                 }}
+                rating={entry.rating}
+                review={entry.review}
+                activeTab={activeTab}
               />
             ))}
           </section>

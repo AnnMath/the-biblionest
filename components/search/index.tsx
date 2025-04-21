@@ -36,7 +36,7 @@ const Search = () => {
   const fetchedOffsets = useRef<Set<number>>(new Set())
   const fetchedWorkIds = useRef<Set<string>>(new Set())
 
-  const limit = 18
+  const limit = 6
 
   const fetchAllUpToOffset = async (targetOffset: number) => {
     fetchedOffsets.current.clear()
