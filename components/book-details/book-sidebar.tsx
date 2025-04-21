@@ -1,3 +1,5 @@
+'use client'
+
 import { Book } from '@/interfaces'
 import Image from 'next/image'
 import PlaceholderImage from '../placeholder-image/placeholder-image'
@@ -7,8 +9,22 @@ import WishListButton from '../library-interactions/wishlist-button'
 import HasBookButton from '../library-interactions/has-book-button'
 import HasReadButton from '../library-interactions/has-read-button'
 import ToBeReadButton from '../library-interactions/to-be-read'
+import { Button } from '../ui/button'
+import { useState } from 'react'
+import { useSessionStatus } from '@/lib/hooks/useSessionStatus'
+import { useUserBookReview } from '@/lib/hooks/useUserBookReview'
+import UserReviewModal from './user-review-modal'
+import { Star } from 'lucide-react'
 
 const BookSidebar = ({ book }: { book: Book }) => {
+  const { userId } = useSessionStatus()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { initialRating, initialReview, handleSaveReview } = useUserBookReview(
+    book,
+    userId
+  )
+
   return (
     <aside className="col-span-1 flex flex-col gap-3">
       <div className="relative w-[180px] h-[270px]">
@@ -37,6 +53,7 @@ const BookSidebar = ({ book }: { book: Book }) => {
       ) : (
         <p className="text-sm">No ratings yet</p>
       )}
+
       <FavouriteButton
         title={book.title}
         authors={book.authors}
@@ -76,6 +93,19 @@ const BookSidebar = ({ book }: { book: Book }) => {
         workId={book.workId}
         editionKey={book.editionKey}
         authorKeys={book.authorKeys}
+      />
+      <Button variant="outline" onClick={() => setIsModalOpen(true)}>
+        <Star className="fill-amber-400" />
+        {initialReview || initialRating ? 'Edit your review' : 'Write a review'}
+      </Button>
+      <UserReviewModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={(rating, review) =>
+          handleSaveReview(rating, review, () => setIsModalOpen(false))
+        }
+        initialRating={initialRating ?? undefined}
+        initialReview={initialReview}
       />
     </aside>
   )
