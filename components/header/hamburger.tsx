@@ -33,6 +33,7 @@ const Hamburger = ({ onSignInClick, onSignOutClick }: HamburgerProps) => {
   const links = [
     { title: 'Explore', href: '/search' },
     { title: 'My library', href: '/library' },
+    { title: 'About', href: '/about' },
   ]
 
   return (

@@ -78,6 +78,11 @@ const Header = () => {
             My library
           </Link>
         </li>
+        <li>
+          <Link href="/about" className="hover:underline">
+            About
+          </Link>
+        </li>
       </ul>
 
       {isSessionLoading ? (
