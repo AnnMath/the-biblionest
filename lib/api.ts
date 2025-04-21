@@ -231,17 +231,27 @@ export const fetchPopularWorksByAuthor = async (
 }
 
 /*RANDOM QUOTES*/
-export const fetchQuote = async (): Promise<Quote> => {
-  const URL = 'https://recite-production.up.railway.app/api/v1/random'
-  const response = await fetch(URL)
-  if (!response.ok) {
-    throw new Error(`Response status: ${response.status}`)
-  }
-  const result = await response.json()
-  return {
-    id: result._id,
-    quote: result.quote,
-    book: result.book,
-    author: result.author,
-  }
+// export const fetchQuote = async (): Promise<Quote> => {
+//   const URL = 'https://recite-production.up.railway.app/api/v1/random'
+//   const response = await fetch(URL)
+//   if (!response.ok) {
+//     throw new Error(`Response status: ${response.status}`)
+//   }
+//   const result = await response.json()
+//   return {
+//     id: result._id,
+//     quote: result.quote,
+//     book: result.book,
+//     author: result.author,
+//   }
+// }
+
+/** EMERGENCY QUOTES */
+export async function fetchQuote(): Promise<Quote> {
+  const baseUrl = 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/quotes.json`)
+  const quotes = await res.json()
+
+  const randomIndex = Math.floor(Math.random() * quotes.length)
+  return quotes[randomIndex]
 }
