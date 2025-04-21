@@ -67,15 +67,22 @@ const Header = () => {
         />
       </Link>
       <Hamburger onSignInClick={openAuthModal} onSignOutClick={signOut} />
-      <ul className="text-2xl font-heading italic font-bold justify-around text-primary-500 items-center hidden sm:flex w-md">
+      <ul className="text-2xl font-heading italic font-bold justify-between text-primary-500 items-center hidden sm:flex md:w-lg w-md">
         <li>
           <Link href="/search" className="hover:underline">
             Explore
           </Link>
         </li>
+        {isLoggedIn && (
+          <li>
+            <Link href="/library" className="hover:underline">
+              My library
+            </Link>
+          </li>
+        )}
         <li>
-          <Link href="/library" className="hover:underline">
-            My library
+          <Link href="/about" className="hover:underline">
+            About
           </Link>
         </li>
       </ul>

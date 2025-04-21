@@ -2,6 +2,7 @@ import { Book, BookFromAPI, BookLite, Quote } from '@/interfaces'
 import { SearchType } from '@/types'
 import findAppropriateEdition from '@/utils/helpers/editionHelper'
 import getLanguages from '@/utils/helpers/getLanguageHelper'
+import { createClient } from '@/utils/supabase/client'
 
 const BASE_URL = 'https://openlibrary.org'
 
@@ -168,6 +169,40 @@ export const fetchTrending = async (): Promise<BookLite[]> => {
   const books = getLiteBooks(searchData.works)
 
   return books
+}
+
+export const fetchTrendingInNest = async () => {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('books')
+    .select(
+      `
+      id,
+      title,
+      author_names,
+      cover_url,
+      work_id,
+      edition_key,
+      view_count
+    `
+    )
+    .order('view_count', { ascending: false })
+    .limit(10)
+
+  if (error) {
+    console.error('Error fetching trending books:', error.message)
+    return []
+  }
+
+  // TODO: Type this properly
+  return data.map((book: any) => ({
+    title: book.title,
+    authors: book.author_names?.split(',').map((a: string) => a.trim()) || [],
+    coverUrl: book.cover_url,
+    workId: book.work_id,
+    editionKey: book.edition_key,
+  }))
 }
 
 /** AUTHORS */
