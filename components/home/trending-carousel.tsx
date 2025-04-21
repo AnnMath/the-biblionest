@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { fetchTrending } from '@/lib/api'
+import { fetchTrending, fetchTrendingInNest } from '@/lib/api'
 import TheSpiteCarousel from '../carousel/the-spite-carousel'
 import { BookLite } from '@/interfaces'
 import TrendingCarouselSkeleton from '../loading/trending-carousel-skeleton'
@@ -13,7 +13,7 @@ const TrendingCarousel = () => {
   useEffect(() => {
     const loadTrending = async () => {
       try {
-        const trending = await fetchTrending()
+        const trending = await fetchTrendingInNest()
         setBooks(trending)
       } catch (error) {
         console.error('Failed to fetch trending books:', error)
@@ -33,8 +33,8 @@ const TrendingCarousel = () => {
     <div className="w-full max-w-3xl">
       <TheSpiteCarousel
         books={books}
-        header="What's trending right now?"
-        description="See what the Open Library community is adding to their bookshelves right now"
+        header="Trending in the Nest"
+        description="These are the most viewed books in BiblioNest right now"
       />
     </div>
   )
