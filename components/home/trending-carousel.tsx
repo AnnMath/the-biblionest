@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { fetchTrending, fetchTrendingInNest } from '@/lib/api'
+import { fetchTrendingInNest } from '@/lib/api'
 import TheSpiteCarousel from '../carousel/the-spite-carousel'
 import { BookLite } from '@/interfaces'
 import TrendingCarouselSkeleton from '../loading/trending-carousel-skeleton'
