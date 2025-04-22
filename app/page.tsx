@@ -3,6 +3,8 @@ import QuoteCard from '@/components/home/quote-card'
 import TrendingCarousel from '@/components/home/trending-carousel-wrapper'
 import { fetchQuote } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 const Home = async () => {
   const initialQuote = await fetchQuote()
 
