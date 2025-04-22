@@ -161,7 +161,7 @@ export const fetchBookById = async (
 }
 
 export const fetchTrending = async (): Promise<BookLite[]> => {
-  let searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
+  const searchUrl = `${BASE_URL}/trending/daily.json?limit=10`
 
   const searchData = await fetchFromAPI(searchUrl)
   if (!searchData?.works) return []
@@ -211,7 +211,7 @@ export const fetchPopularWorksByAuthor = async (
   authorName: string,
   limit: number = 10
 ): Promise<BookLite[]> => {
-  let searchUrl = `${BASE_URL}/search.json?author=${encodeURIComponent(
+  const searchUrl = `${BASE_URL}/search.json?author=${encodeURIComponent(
     authorName
   )}&language=eng&limit=${limit}&sort=editions`
 
