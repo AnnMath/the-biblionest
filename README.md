@@ -66,4 +66,4 @@ Tools used: Trello, GitHub, local-first dev philosophy with future plans for pub
 ## 🐦 Get in Touch
 
 This project is made with love and curiosity.  
-Want to collaborate, give feedback, or just say hi? Reach out via [GitHub](https://github.com/Gremlet)!
+Want to collaborate, give feedback, or just say hi? Reach out via [GitHub](https://github.com/AnnMath)!
