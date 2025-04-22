@@ -10,7 +10,6 @@ import {
 
 const BookSynopsis = ({ synopsis }: { synopsis: string | undefined }) => {
   const { main, extras } = formatSynopsis(synopsis)
-  // TODO: You know what? I could totally take the workId from the link href and link it to the book details page.
   return (
     <div className="space-y-2">
       <ReactMarkdown

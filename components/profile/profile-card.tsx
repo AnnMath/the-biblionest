@@ -22,8 +22,8 @@ const ProfileCard = ({
             Hi, {displayName}!
           </h1>
           <p className="">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel tempora
-            nam architecto quisquam doloribus
+            Here's your BiblioNest profile. As the app grows, so will this page.
+            But for now, here's a hearty BiblioNest hello!
           </p>
         </div>
       </section>
