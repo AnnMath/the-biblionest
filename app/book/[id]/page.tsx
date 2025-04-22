@@ -1,6 +1,6 @@
 import BookDetailCard from '@/components/book-details/book-detail-card'
+import ErrorPage from '@/components/error/error-page'
 import { fetchBookById } from '@/lib/api'
-import { notFound } from 'next/navigation'
 
 const BookDetailsPage = async ({
   params,
@@ -15,7 +15,7 @@ const BookDetailsPage = async ({
 
   const book = await fetchBookById(id, edition)
   // TODO: maybe some better error handling here
-  if (!book) notFound()
+  if (!book) return <ErrorPage />
 
   return (
     <div className="bg-background-300 min-h-screen w-full py-8">
