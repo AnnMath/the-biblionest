@@ -1,5 +1,7 @@
+import LoadingDecoration from '@/components/loading/loading-decoration'
 import Search from '@/components/search'
 import Image from 'next/image'
+import { Suspense } from 'react'
 
 const SearchPage = () => {
   return (
@@ -22,7 +24,9 @@ const SearchPage = () => {
             className="w-sm h-auto"
           />
         </div>
-        <Search />
+        <Suspense fallback={<LoadingDecoration />}>
+          <Search />
+        </Suspense>
       </article>
     </>
   )
