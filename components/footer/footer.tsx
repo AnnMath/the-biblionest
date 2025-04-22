@@ -17,7 +17,7 @@ const Footer = () => {
         <h2 className="text-2xl sm:text-3xl font-heading font-bold italic">
           The BiblioNest. Your personal library.
         </h2>
-        <section className="flex flex-col gap-4 justify-between">
+        <section className="flex flex-col gap-4 justify-between text-left">
           <Link href="/search">Explore</Link>
           <Link href="/library">Library</Link>
           <Link href="/about">About</Link>
