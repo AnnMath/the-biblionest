@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, MouseEvent, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -45,7 +45,8 @@ const AuthModal = ({
     onClose(open)
   }
 
-  const handleAuth = async () => {
+  const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     setError(null)
     setLoading(true)
 
@@ -88,7 +89,8 @@ const AuthModal = ({
     }
   }
 
-  const toggleSignUp = () => {
+  const toggleSignUp = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     setIsSignUp(!isSignUp)
     setError(null) // Clear any previous errors when switching modes
   }
@@ -104,7 +106,7 @@ const AuthModal = ({
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <form className="space-y-4" onSubmit={(e) => handleAuth(e)}>
           {isSignUp && (
             <Input
               placeholder="Display Name"
@@ -128,12 +130,12 @@ const AuthModal = ({
             className="bg-background-200"
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <Button onClick={handleAuth} disabled={loading} className="w-full">
+          <Button disabled={loading} className="w-full">
             {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
           </Button>
           <Button
             variant="outline"
-            onClick={toggleSignUp}
+            onClick={(e) => toggleSignUp(e)}
             className="w-full text-text-500"
             disabled={loading}
           >
@@ -151,7 +153,7 @@ const AuthModal = ({
               </Link>
             </p>
           )}
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   )
