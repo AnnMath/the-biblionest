@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { createClient } from '@/utils/supabase/client'
+import Link from 'next/link'
 
 const AuthModal = ({
   isOpen,
@@ -140,6 +141,16 @@ const AuthModal = ({
               ? 'Already have an account? Sign in'
               : "Don't have an account? Sign up"}
           </Button>
+          {!isSignUp && (
+            <p className="text-center font-heading font-bold italic text-text-500/80">
+              <Link
+                href="/auth/forgot-password"
+                onClick={() => handleClose(false)}
+              >
+                Forgot your password?
+              </Link>
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>
