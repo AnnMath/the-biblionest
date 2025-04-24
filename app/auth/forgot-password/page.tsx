@@ -19,7 +19,7 @@ const ForgotPasswordPage = () => {
     setIsSubmitting(true)
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://the-biblionest.vercel.app/auth/reset-password',
+      redirectTo: 'https://www.thebiblionest.com/auth/reset-password',
     })
 
     if (error) {
